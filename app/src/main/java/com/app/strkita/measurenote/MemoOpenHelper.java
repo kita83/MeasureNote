@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
+ * DBアクセス管理
  * Created by kitada on 2017/02/09.
  */
 
@@ -14,16 +15,16 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
     public static final String CREATE_TABLE =
             "create table notes (" +
                     "_id integer primary key autoincrement, " +
-                    "title text, " +
                     "body text, " +
-                    "time integer, " +
-                    "created datetime default current_timestamp, " +
-                    "updated datetime default current_timestamp)";
+                    "elapsed_time integer, " +
+                    "goal_count integer, " +
+                    "created integer, " +
+                    "updated integer default current_timestamp)";
     public static final String INIT_TABLE =
-            "insert into notes (title, body, time) values " +
-                    "('title1', 'body1body1body1body1', 1257), " +
-                    "('title2title2', 'body2body2body2body2body2body2body2', 2963), " +
-                    "('title3', 'body3body3body3body3body3', 3945)";
+            "insert into notes (body, elapsed_time, goal_count, created) values " +
+                    "('今日は雪が降った。寒かった', 1257, 3000, datetime('now', 'localtime')), " +
+                    "('body2body2body2body2body2body2body2', 2963, 5000, datetime('now', 'localtime') ), " +
+                    "('This is my first note.', 3945, 800, datetime('now', 'localtime') )";
     public static final String DROP_TABLE =
             "drop table if exists " + MemoContract.Notes.TABLE_NAME;
 

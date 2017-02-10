@@ -78,6 +78,11 @@ public class MemoContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        if (uriMatcher.match(uri) != NOTE_ITEM) {
+            throw new IllegalArgumentException("Invalid URI: " + uri);
+        }
+        SQLiteDatabase db = memoOpenHelper.getWritableDatabase();
+        db.insert(MemoContract.Notes.TABLE_NAME, null, values);
         return null;
     }
 
