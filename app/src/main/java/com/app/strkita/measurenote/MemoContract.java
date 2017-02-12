@@ -13,9 +13,10 @@ public final class MemoContract {
 
     public static abstract class Notes implements BaseColumns {
         public static final String TABLE_NAME = "notes";
-        public static final String COL_TITLE = "title";
         public static final String COL_BODY = "body";
-        public static final String COL_CREATED = "created";
+        public static final String COL_ELAPSED_TIME = "elapsed_time";
+        public static final String COL_GOAL_COUNT= "goal_count";
         public static final String COL_UPDATED = "updated";
+        public static final String COL_CREATED = "created";
     }
 }

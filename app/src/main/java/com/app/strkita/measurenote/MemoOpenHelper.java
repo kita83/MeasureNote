@@ -14,12 +14,12 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
     public static final int DB_VERSION = 1;
     public static final String CREATE_TABLE =
             "create table notes (" +
-                    "_id integer primary key autoincrement, " +
-                    "body text, " +
-                    "elapsed_time integer, " +
-                    "goal_count integer, " +
-                    "created integer, " +
-                    "updated integer default current_timestamp)";
+                    MemoContract.Notes._ID + " integer primary key autoincrement, " +
+                    MemoContract.Notes.COL_BODY + " text, " +
+                    MemoContract.Notes.COL_ELAPSED_TIME + " integer, " +
+                    MemoContract.Notes.COL_GOAL_COUNT + " integer, " +
+                    MemoContract.Notes.COL_CREATED + " integer, " +
+                    MemoContract.Notes.COL_UPDATED + " integer default current_timestamp)";
     public static final String INIT_TABLE =
             "insert into notes (body, elapsed_time, goal_count, created) values " +
                     "('今日は雪が降った。寒かった', 1257, 3000, datetime('now', 'localtime')), " +

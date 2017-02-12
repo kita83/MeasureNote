@@ -15,12 +15,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <provider
-            android:name=".MemoContentProvider"
-            android:authorities="com.app.strkita.measurenote.MemoContentProvider"
-            android:enabled="true"
-            android:exported="true" />
     </application>
 
 </manifest>
