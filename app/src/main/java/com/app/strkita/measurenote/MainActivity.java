@@ -1,49 +1,46 @@
 package com.app.strkita.measurenote;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listView = (ListView) findViewById(R.id.noteList);
+
+        // DB
         MemoOpenHelper memoOpenHelper = new MemoOpenHelper(this);
         SQLiteDatabase db = memoOpenHelper.getWritableDatabase();
 
-//        ContentValues newUser = new ContentValues();
-//        newUser.put(MemoContract.Notes.COL_BODY, "tanaka");
-//        newUser.put(MemoContract.Notes.COL_SCORE, 44);
-//        long newId = db.insert(
-//                MemoContract.Notes.TABLE_NAME,
-//                null,
-//                newUser
-//        );
-//
-//        ContentValues newScore = new ContentValues();
-//        newScore.put(MemoContract.Notes.COL_SCORE, 100);
-//        int updateCount = db.update(
-//                MemoContract.Notes.TABLE_NAME,
-//                newScore,
-//                MemoContract.Notes.COL_NAME + " = ?",
-//                new String[] { "fkoji" }
-//        );
-//
-//        int deletedCount = db.delete(
-//                MemoContract.Notes.TABLE_NAME,
-//                MemoContract.Notes.COL_NAME + " = ?",
-//                new String[] { "dotinstall" }
-//        );
+        ArrayList<ListItems> items = new ArrayList<ListItems>();
 
-        Cursor c = null;
-        c = db.query(
+        // select
+        Cursor c = db.query(
                 MemoContract.Notes.TABLE_NAME,
+                null,
                 null,
                 null,
                 null,
@@ -52,19 +49,40 @@ public class MainActivity extends AppCompatActivity {
                 null
         );
 
-        Log.v("DB_TEST", "Count: " + c.getCount());
+        boolean isEof = c.moveToLast();
+        while (isEof) {
+            ListItems item = new ListItems();
+            item.setBody(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
+            item.setGoalCount(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
+            item.setGoalCount(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
+            item.setElapsedTime(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME)));
 
-        while(c.moveToNext()) {
-            int id = c.getInt(c.getColumnIndex((MemoContract.Notes._ID)));
-            String body = c.getString(c.getColumnIndex((MemoContract.Notes.COL_BODY)));
-            int elapsedTime = c.getInt(c.getColumnIndex((MemoContract.Notes.COL_ELAPSED_TIME)));
-            int goalCount = c.getInt(c.getColumnIndex((MemoContract.Notes.COL_GOAL_COUNT)));
-            int created = c.getInt(c.getColumnIndex((MemoContract.Notes.COL_CREATED)));
-            int updated = c.getInt(c.getColumnIndex((MemoContract.Notes.COL_UPDATED)));
-            Log.v("DB_DEBUG", " id: " + id + " body: " + body + " elapsedTime: " + elapsedTime +
-                    " goalCount: " + goalCount + " created: " + created + " updated: " + updated);
+            items.add(item);
+            isEof = c.moveToPrevious();
         }
+
         c.close();
         db.close();
+
+//        // adapterの準備
+//        String[] from = {"body", "current_count", "goal_count", "elapsed_time"};
+//        int[] to = {R.id.body, R.id.current_count, R.id.goal_count, R.id.elapsed_time};
+
+        // adapter生成
+        NoteListAdapter adapter = new NoteListAdapter(
+                this,
+                R.layout.notelist,
+                items
+        );
+
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.v("Log", String.valueOf(position));
+            }
+        });
     }
+
 }
