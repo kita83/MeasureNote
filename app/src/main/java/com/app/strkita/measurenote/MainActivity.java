@@ -2,6 +2,7 @@ package com.app.strkita.measurenote;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
+    public final static String EXTRA_MYID = "com.app.strkita.measurenote.MYID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.v("Log", String.valueOf(position));
+                Intent intent = new Intent(MainActivity.this, Content.class);
+                intent.putExtra(EXTRA_MYID, id);
+                startActivity(intent);
             }
         });
     }
