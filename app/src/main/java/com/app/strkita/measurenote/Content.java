@@ -23,33 +23,8 @@ public class Content extends AppCompatActivity {
         SQLiteDatabase db = memoOpenHelper.getWritableDatabase();
 
         Intent intent = getIntent();
-        noteId = intent.getLongExtra("id", 0L);
+        body.setText(intent.getStringExtra("body"));
 
-        String[] projection = { MemoContract.Notes.COL_BODY };
-        String selection = "_id = ?";
-        String[] selectionArgs = { noteId.toString() };
-
-        if (noteId != null) {
-
-            Cursor c = db.query(
-                    MemoContract.Notes.TABLE_NAME,
-                    projection,
-                    selection,
-                    selectionArgs,
-                    null,
-                    null,
-                    null
-            );
-
-            c.moveToFirst();
-
-            String debug = c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY));
-
-            body.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
-
-            c.close();
-        }
-
-        db.close();
     }
 }
+

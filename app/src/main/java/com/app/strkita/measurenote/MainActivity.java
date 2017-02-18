@@ -1,26 +1,15 @@
 package com.app.strkita.measurenote;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
@@ -30,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = (ListView) findViewById(R.id.noteList);
+        listView = (ListView) findViewById(R.id.listView);
 
         // DB
         MemoOpenHelper memoOpenHelper = new MemoOpenHelper(this);
@@ -53,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isEof = c.moveToLast();
         while (isEof) {
             ListItems item = new ListItems();
+            item.setId(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_ID)));
             item.setBody(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
             item.setGoalCount(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
             item.setGoalCount(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
@@ -76,13 +66,15 @@ public class MainActivity extends AppCompatActivity {
                 items
         );
 
+        listView.setEmptyView(findViewById(R.id.emptyView));
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, Content.class);
-                intent.putExtra("id", parent.getItemIdAtPosition(position));
+                String text = parent.getItemAtPosition(position).toString();
+                intent.putExtra("body", text);
                 startActivity(intent);
             }
         });
