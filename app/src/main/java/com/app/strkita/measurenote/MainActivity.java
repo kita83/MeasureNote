@@ -24,7 +24,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ListView listView;
-    public final static String EXTRA_MYID = "com.app.strkita.measurenote.MYID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, Content.class);
-                intent.putExtra(EXTRA_MYID, id);
+                intent.putExtra("id", parent.getItemIdAtPosition(position));
                 startActivity(intent);
             }
         });
