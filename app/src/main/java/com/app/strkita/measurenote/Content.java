@@ -1,29 +1,53 @@
 package com.app.strkita.measurenote;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
 
 public class Content extends AppCompatActivity {
+
     private Long noteId;
-    private EditText body;
+    private EditText bodyText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
 
-        body = (EditText) findViewById(R.id.body);
-
-        // DB
-        MemoOpenHelper memoOpenHelper = new MemoOpenHelper(this);
-        SQLiteDatabase db = memoOpenHelper.getWritableDatabase();
+        bodyText = (EditText) findViewById(R.id.bodyText);
 
         Intent intent = getIntent();
-        body.setText(intent.getStringExtra("body"));
+        noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
+
+        if (noteId == 0) {
+
+        } else {
+            Uri uri = ContentUris.withAppendedId(
+                    NoteContentProvider.CONTENT_URI,
+                    noteId
+            );
+
+            String[] projection = {
+                    MemoContract.Notes.COL_BODY
+            };
+
+            Cursor c = getContentResolver().query(
+                    uri,
+                    projection,
+                    MemoContract.Notes._ID + " = ?",
+                    new String[] { Long.toString(noteId) },
+                    null
+            );
+
+            c.moveToFirst();
+            bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
+            c.close();
+        }
 
     }
 }
