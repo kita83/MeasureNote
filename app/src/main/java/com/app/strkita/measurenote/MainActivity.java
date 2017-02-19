@@ -26,7 +26,11 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = memoOpenHelper.getWritableDatabase();
 
         ArrayList<ListItems> items = new ArrayList<ListItems>();
-
+        for (int i = 0; i < 5; i++) {
+            ListItems item = new ListItems();
+            item.setBody("item " + i);
+            items.add(item);
+        }
         // select
         Cursor c = db.query(
                 MemoContract.Notes.TABLE_NAME,
@@ -42,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         boolean isEof = c.moveToLast();
         while (isEof) {
             ListItems item = new ListItems();
-            item.setId(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_ID)));
             item.setBody(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
             item.setGoalCount(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
             item.setGoalCount(c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
@@ -54,10 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         c.close();
         db.close();
-
-//        // adapterの準備
-//        String[] from = {"body", "current_count", "goal_count", "elapsed_time"};
-//        int[] to = {R.id.body, R.id.current_count, R.id.goal_count, R.id.elapsed_time};
 
         // adapter生成
         NoteListAdapter adapter = new NoteListAdapter(
