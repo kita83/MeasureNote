@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MeasureNote</string>
+    <string name="action_add">ADD</string>
+    <string name="action_save">SAVE</string>
+    <string name="action_delete">DELETE</string>
+    <string name="action_setting">Setting</string>
+    <string name="hint_start_timer">入力開始でタイマー始動</string>
 </resources>
