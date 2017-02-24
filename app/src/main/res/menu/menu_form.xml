@@ -8,12 +8,12 @@
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/action_delete"
-        app:showAsAction="always|withText" />
-    <item
-        android:id="@+id/action_save"
-        android:orderInCategory="101"
-        android:icon="@android:drawable/ic_menu_save"
-        android:title="@string/action_save"
-        app:showAsAction="always|withText" />
+        app:showAsAction="ifRoom" />
+    <!--<item-->
+        <!--android:id="@+id/action_save"-->
+        <!--android:orderInCategory="101"-->
+        <!--android:icon="@android:drawable/ic_menu_save"-->
+        <!--android:title="@string/action_save"-->
+        <!--app:showAsAction="ifRoom" />-->
 
 </menu>

@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +40,10 @@ public class Content extends AppCompatActivity {
 
         bodyText = (EditText) findViewById(R.id.bodyText);
         countText = (TextView) findViewById(R.id.countText);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
@@ -73,19 +79,6 @@ public class Content extends AppCompatActivity {
             countText.setText("999");
             c.close();
         }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem deleteItem = menu.findItem(R.id.action_delete);
-        if (noteId == 0L) deleteItem.setVisible(false);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_form, menu);
-        return true;
     }
 
     private void deleteNote() {
@@ -145,14 +138,31 @@ public class Content extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem deleteItem = menu.findItem(R.id.action_delete);
+        if (noteId == 0L) deleteItem.setVisible(false);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_form, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
                 deleteNote();
                 break;
-            case R.id.action_save:
+//            case R.id.action_save:
+//                saveNote();
+//                break;
+            case android.R.id.home:
                 saveNote();
-                break;
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

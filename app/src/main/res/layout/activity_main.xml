@@ -15,7 +15,7 @@
 
     <!--データが無い場合に表示-->
     <TextView
-        android:text="No data available"
+        android:text="@string/no_data"
         android:id="@+id/emptyView"
         android:padding="16dp"
         android:layout_width="match_parent"
