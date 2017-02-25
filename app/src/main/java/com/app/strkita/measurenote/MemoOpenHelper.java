@@ -3,28 +3,44 @@ package com.app.strkita.measurenote;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 /**
  * DBアクセス管理
  * Created by kitada on 2017/02/09.
  */
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class MemoOpenHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "measurenote.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 6;
+    public static final long ts = System.currentTimeMillis();
     public static final String CREATE_TABLE =
             "create table notes (" +
                     MemoContract.Notes._ID + " integer primary key autoincrement, " +
                     MemoContract.Notes.COL_BODY + " text, " +
                     MemoContract.Notes.COL_ELAPSED_TIME + " integer, " +
+                    MemoContract.Notes.COL_CURRENT_COUNT + " integer, " +
                     MemoContract.Notes.COL_GOAL_COUNT + " integer, " +
                     MemoContract.Notes.COL_CREATED + " integer, " +
-                    MemoContract.Notes.COL_UPDATED + " integer default current_timestamp)";
+                    MemoContract.Notes.COL_UPDATED + " integer)";
     public static final String INIT_TABLE =
-            "insert into notes (body, elapsed_time, goal_count, created) values " +
-                    "('今日は雪が降った。寒かった', 1257, 3000, datetime('now', 'localtime')), " +
-                    "('body2body2body2body2body2body2body2', 2963, 5000, datetime('now', 'localtime') ), " +
-                    "('This is my first note.', 3945, 800, datetime('now', 'localtime') )";
+            "insert into notes (" +
+                    MemoContract.Notes.COL_BODY + ", " +
+                    MemoContract.Notes.COL_ELAPSED_TIME + ", " +
+                    MemoContract.Notes.COL_CURRENT_COUNT + ", " +
+                    MemoContract.Notes.COL_GOAL_COUNT + ", " +
+                    MemoContract.Notes.COL_CREATED + ", " +
+                    MemoContract.Notes.COL_UPDATED +
+                    ") values " +
+                    "('メジャーノートへようこそ', " +
+                    "300, " +
+                    "12, " +
+                    "500,  " +
+                    ts + "," +
+                    ts +
+                    ")";
     public static final String DROP_TABLE =
             "drop table if exists " + MemoContract.Notes.TABLE_NAME;
 

@@ -26,14 +26,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         String[] from = {
                 MemoContract.Notes.COL_BODY,
-                MemoContract.Notes.COL_GOAL_COUNT,
                 MemoContract.Notes.COL_ELAPSED_TIME,
+                MemoContract.Notes.COL_CURRENT_COUNT,
+                MemoContract.Notes.COL_GOAL_COUNT,
+                MemoContract.Notes.COL_UPDATED,
         };
 
         int[] to = {
                 R.id.bodyText,
-                R.id.goal_count,
                 R.id.elapsed_time,
+                R.id.current_count,
+                R.id.goal_count,
+                R.id.updated,
         };
 
         adapter = new SimpleCursorAdapter(
@@ -48,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(
                     AdapterView<?> parent,
@@ -88,8 +91,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         String[] projection = {
                 MemoContract.Notes._ID,
                 MemoContract.Notes.COL_BODY,
-                MemoContract.Notes.COL_GOAL_COUNT,
                 MemoContract.Notes.COL_ELAPSED_TIME,
+                MemoContract.Notes.COL_GOAL_COUNT,
+                MemoContract.Notes.COL_CURRENT_COUNT,
+                MemoContract.Notes.COL_CREATED,
                 MemoContract.Notes.COL_UPDATED
         };
 
