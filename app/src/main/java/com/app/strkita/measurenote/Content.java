@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +34,8 @@ public class Content extends AppCompatActivity {
     private Long noteId;
     private EditText bodyText;
     private TextView countText;
+//    static DateFormat yyyymmddhhmm = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class Content extends AppCompatActivity {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("New Note");
             }
-            countText.setText("347");
+            countText.setText("0");
         } else {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("Edit Note");
@@ -76,9 +80,11 @@ public class Content extends AppCompatActivity {
 
             c.moveToFirst();
             bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
-            countText.setText("999");
             c.close();
+            countText.setText("debug");
         }
+
+        bodyText.setSelection(bodyText.length());
     }
 
     private void deleteNote() {
@@ -107,11 +113,13 @@ public class Content extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.N)
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
-        // TODO
-        String updated = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss", Locale.US).format(new Date());
+        int eTime = 0000;
+        int updated = 100;
 
         ContentValues values = new ContentValues();
         values.put(MemoContract.Notes.COL_BODY, body);
+        values.put(MemoContract.Notes.COL_ELAPSED_TIME, eTime);
+        values.put(MemoContract.Notes.COL_CURRENT_COUNT, body.length());
         values.put(MemoContract.Notes.COL_UPDATED, updated);
 
         if (noteId == 0L) {
@@ -139,8 +147,8 @@ public class Content extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem deleteItem = menu.findItem(R.id.action_delete);
-        if (noteId == 0L) deleteItem.setVisible(false);
+//        MenuItem deleteItem = menu.findItem(R.id.action_delete);
+//        if (noteId == 0L) deleteItem.setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -156,9 +164,6 @@ public class Content extends AppCompatActivity {
             case R.id.action_delete:
                 deleteNote();
                 break;
-//            case R.id.action_save:
-//                saveNote();
-//                break;
             case android.R.id.home:
                 saveNote();
                 NavUtils.navigateUpFromSameTask(this);
@@ -166,5 +171,24 @@ public class Content extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    /**
+//     * Long の数字を日付フォーマットに変換します。
+//     * @param date Long の数字
+//     * @return "yyyy/MM/dd HH:mm" フォーマットの文字列
+//     */
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public static String convertLongToYyyymmddhhmm(Long date) {
+//        return yyyymmddhhmm.format(new Date(date));
+//    }
+//    /**
+//     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得する.<br>
+//     */
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public static String getNowDate(){
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+//        Date date = new Date(System.currentTimeMillis());
+//        return sdf.format(date);
+//    }
 }
 
