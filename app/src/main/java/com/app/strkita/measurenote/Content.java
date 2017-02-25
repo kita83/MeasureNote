@@ -19,15 +19,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;q
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Date;
-import java.util.Locale;
-
-import static com.app.strkita.measurenote.R.id.bodyText;
-import static com.app.strkita.measurenote.R.id.countText;
 
 public class Content extends AppCompatActivity {
 
@@ -46,8 +42,9 @@ public class Content extends AppCompatActivity {
         countText = (TextView) findViewById(R.id.countText);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
@@ -78,9 +75,10 @@ public class Content extends AppCompatActivity {
                     null
             );
 
-            c.moveToFirst();
-            bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
-            c.close();
+            if (c != null && c.moveToFirst()) {
+                bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
+                c.close();
+            }
             countText.setText("debug");
         }
 
@@ -114,7 +112,7 @@ public class Content extends AppCompatActivity {
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
         int eTime = 0000;
-        int updated = 100;
+        long updated = System.currentTimeMillis();
 
         ContentValues values = new ContentValues();
         values.put(MemoContract.Notes.COL_BODY, body);
@@ -173,15 +171,6 @@ public class Content extends AppCompatActivity {
     }
 
 //    /**
-//     * Long の数字を日付フォーマットに変換します。
-//     * @param date Long の数字
-//     * @return "yyyy/MM/dd HH:mm" フォーマットの文字列
-//     */
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public static String convertLongToYyyymmddhhmm(Long date) {
-//        return yyyymmddhhmm.format(new Date(date));
-//    }
-//    /**
 //     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得する.<br>
 //     */
 //    @RequiresApi(api = Build.VERSION_CODES.N)
@@ -189,6 +178,15 @@ public class Content extends AppCompatActivity {
 //        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 //        Date date = new Date(System.currentTimeMillis());
 //        return sdf.format(date);
+//    }
+//    /**
+//     * Long の数字を日付フォーマットに変換します。
+//     * @param date Long の数字
+//     * @return "yyyy/MM/dd HH:mm" フォーマットの文字列
+//     */
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public static String convertLongToYyyymmddhhmm(Long date) {
+//        return yyyymmddhhmm.format(new Date(date));
 //    }
 }
 
