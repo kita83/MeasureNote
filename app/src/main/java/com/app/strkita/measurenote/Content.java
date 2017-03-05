@@ -1,36 +1,47 @@
 package com.app.strkita.measurenote;
 
 import android.annotation.TargetApi;
-import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class Content extends AppCompatActivity {
 
-    private Long noteId;
+    private long startTime;
+
+    private Handler handler = new Handler();
+    private Runnable updateTimer;
+
+    private long noteId;
     private EditText bodyText;
     private TextView countText;
-//    static DateFormat yyyymmddhhmm = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+    private TextView timerView;
+    private long elapsedTime = 0L;
+    private String initFlag = "0";
+    static DateFormat yyyymmddhhmm = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
 
 
     @Override
@@ -40,6 +51,7 @@ public class Content extends AppCompatActivity {
 
         bodyText = (EditText) findViewById(R.id.bodyText);
         countText = (TextView) findViewById(R.id.countText);
+        timerView = (TextView) findViewById(R.id.timerView);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -54,6 +66,7 @@ public class Content extends AppCompatActivity {
                 getSupportActionBar().setTitle("New Note");
             }
             countText.setText("0");
+            timerView.setText("00:00:00");
         } else {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("Edit Note");
@@ -64,7 +77,8 @@ public class Content extends AppCompatActivity {
             );
 
             String[] projection = {
-                    MemoContract.Notes.COL_BODY
+                    MemoContract.Notes.COL_BODY,
+                    MemoContract.Notes.COL_ELAPSED_TIME
             };
 
             Cursor c = getContentResolver().query(
@@ -75,14 +89,40 @@ public class Content extends AppCompatActivity {
                     null
             );
 
-            if (c != null && c.moveToFirst()) {
+            // 経過時間を取得
+            if (c != null) {
+                c.moveToFirst();
                 bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
+                elapsedTime = c.getInt(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss", Locale.US);
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                timerView.setText(sdf.format(elapsedTime));
                 c.close();
             }
-            countText.setText("debug");
         }
 
         bodyText.setSelection(bodyText.length());
+        countText.setText(String.valueOf(bodyText.length()) + "文字");
+
+        bodyText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (initFlag.equals("0")) {
+                    startTimer();
+                    initFlag = "1";
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                countText.setText(String.valueOf(bodyText.length()) + "文字");
+            }
+        });
     }
 
     private void deleteNote() {
@@ -111,14 +151,14 @@ public class Content extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.N)
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
-        int eTime = 0000;
-        long updated = System.currentTimeMillis();
+        long saveTime = SystemClock.elapsedRealtime() - startTime + elapsedTime;
+//        long updated = System.currentTimeMillis();
 
         ContentValues values = new ContentValues();
         values.put(MemoContract.Notes.COL_BODY, body);
-        values.put(MemoContract.Notes.COL_ELAPSED_TIME, eTime);
+        values.put(MemoContract.Notes.COL_ELAPSED_TIME, saveTime);
         values.put(MemoContract.Notes.COL_CURRENT_COUNT, body.length());
-        values.put(MemoContract.Notes.COL_UPDATED, updated);
+        values.put(MemoContract.Notes.COL_UPDATED, getNowDate());
 
         if (noteId == 0L) {
             // new Note
@@ -143,6 +183,29 @@ public class Content extends AppCompatActivity {
         finish();
     }
 
+    public void startTimer() {
+        // 起動してからの経過時間（ミリ秒）
+        startTime = SystemClock.elapsedRealtime();
+
+        // 一定時間ごとに現在の経過時間を表示
+        updateTimer = new Runnable() {
+            @Override
+            public void run() {
+                long t = SystemClock.elapsedRealtime() - startTime + elapsedTime;
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                timerView.setText(sdf.format(t));
+                handler.removeCallbacks(updateTimer);
+                handler.postDelayed(updateTimer, 10);
+            }
+        };
+        handler.postDelayed(updateTimer, 10);
+    }
+
+    public void stopTimer() {
+        handler.removeCallbacks(updateTimer);
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 //        MenuItem deleteItem = menu.findItem(R.id.action_delete);
@@ -164,29 +227,28 @@ public class Content extends AppCompatActivity {
                 break;
             case android.R.id.home:
                 saveNote();
+                stopTimer();
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-//    /**
-//     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得する.<br>
-//     */
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public static String getNowDate(){
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//        Date date = new Date(System.currentTimeMillis());
-//        return sdf.format(date);
-//    }
-//    /**
-//     * Long の数字を日付フォーマットに変換します。
-//     * @param date Long の数字
-//     * @return "yyyy/MM/dd HH:mm" フォーマットの文字列
-//     */
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public static String convertLongToYyyymmddhhmm(Long date) {
-//        return yyyymmddhhmm.format(new Date(date));
-//    }
+    /**
+     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得する.<br>
+     */
+    public static String getNowDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
+        Date date = new Date(System.currentTimeMillis());
+        return sdf.format(date);
+    }
+    /**
+     * Long の数字を日付フォーマットに変換します。
+     * @param date Long の数字
+     * @return "yyyy/MM/dd HH:mm" フォーマットの文字列
+     */
+    public static String convertLongToYyyymmddhhmm(Long date) {
+        return yyyymmddhhmm.format(new Date(date));
+    }
 }
 

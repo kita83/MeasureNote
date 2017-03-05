@@ -2,6 +2,7 @@ package com.app.strkita.measurenote;
 
 import android.content.Intent;
 import android.database.Cursor;
+import java.text.SimpleDateFormat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -13,11 +14,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.Locale;
+import java.util.TimeZone;
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SimpleCursorAdapter.ViewBinder {
 
     private SimpleCursorAdapter adapter;
     public final static String EXTRA_ID = "com.app.strkita.measurenote.ID";
+    private static final int BODY = 1;
+    private static final int ELAPSED_TIME = 2;
+    private static final int CURRENT_COUNT = 3;
+    private static final int GOAL_COUNT = 4;
+    private static final int UPDATED = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 MemoContract.Notes.COL_ELAPSED_TIME,
                 MemoContract.Notes.COL_CURRENT_COUNT,
                 MemoContract.Notes.COL_GOAL_COUNT,
-                MemoContract.Notes.COL_UPDATED,
+                MemoContract.Notes.COL_CREATED,
         };
 
         int[] to = {
@@ -49,8 +59,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 0
         );
 
+        adapter.setViewBinder(this);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(
@@ -66,6 +78,38 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
         getSupportLoaderManager().initLoader(0, null, this);
+    }
+
+    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+        switch (columnIndex) {
+            case BODY:
+                TextView bd = (TextView) view;
+                bd.setText(cursor.getString(columnIndex));
+                return true;
+            case ELAPSED_TIME:
+                TextView et = (TextView) view;
+                // -9時間したミリ秒を取得
+                long t = cursor.getLong(columnIndex);
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+                et.setText(sdf.format(t));
+                return true;
+            case GOAL_COUNT:
+                TextView cc = (TextView) view;
+                cc.setText(cursor.getInt(columnIndex) + " / ");
+                return true;
+            case CURRENT_COUNT:
+                TextView gc = (TextView) view;
+                gc.setText(cursor.getInt(columnIndex) + "文字");
+                return true;
+            case UPDATED:
+                TextView ud = (TextView) view;
+                ud.setText(cursor.getString(columnIndex));
+                return true;
+            default:
+                break;
+        }
+        return false;
     }
 
     @Override
