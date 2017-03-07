@@ -9,6 +9,26 @@
     android:orientation="vertical"
     tools:context="com.app.strkita.measurenote.Content">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/timerView"
+            android:gravity="start"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/countText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"/>
+    </LinearLayout>
+
     <EditText
         android:id="@+id/bodyText"
         android:hint="@string/hint_start_timer"
@@ -19,22 +39,4 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/countText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="end"/>
-
-        <TextView
-            android:id="@+id/timerView"
-            android:layout_gravity="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
 </LinearLayout>

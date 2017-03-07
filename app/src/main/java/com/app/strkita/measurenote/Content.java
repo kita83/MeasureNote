@@ -58,6 +58,9 @@ public class Content extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        NumPickerDialogFragment newFragment = new NumPickerDialogFragment();
+        newFragment.show(getSupportFragmentManager(), "missiles");
+
         Intent intent = getIntent();
         noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
 
@@ -107,7 +110,7 @@ public class Content extends AppCompatActivity {
         bodyText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+//                bodyText.setHint();
             }
 
             @Override

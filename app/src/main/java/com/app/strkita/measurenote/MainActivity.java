@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 MemoContract.Notes.COL_ELAPSED_TIME,
                 MemoContract.Notes.COL_CURRENT_COUNT,
                 MemoContract.Notes.COL_GOAL_COUNT,
-                MemoContract.Notes.COL_CREATED,
+//                MemoContract.Notes.COL_CREATED,
         };
 
         int[] to = {
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 R.id.elapsed_time,
                 R.id.current_count,
                 R.id.goal_count,
-                R.id.updated,
+//                R.id.updated,
         };
 
         adapter = new SimpleCursorAdapter(
@@ -102,10 +102,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 TextView gc = (TextView) view;
                 gc.setText(cursor.getInt(columnIndex) + "文字");
                 return true;
-            case UPDATED:
-                TextView ud = (TextView) view;
-                ud.setText(cursor.getString(columnIndex));
-                return true;
+//            case UPDATED:
+//                TextView ud = (TextView) view;
+//                ud.setText(cursor.getString(columnIndex));
+//                return true;
             default:
                 break;
         }
