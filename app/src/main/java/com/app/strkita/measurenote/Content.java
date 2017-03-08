@@ -21,6 +21,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -58,8 +59,8 @@ public class Content extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        NumPickerDialogFragment newFragment = new NumPickerDialogFragment();
-        newFragment.show(getSupportFragmentManager(), "missiles");
+        CountDialogFragment newFragment = new CountDialogFragment();
+        newFragment.show(getSupportFragmentManager(), "count");
 
         Intent intent = getIntent();
         noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
