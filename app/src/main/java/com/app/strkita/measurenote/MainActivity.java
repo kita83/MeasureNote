@@ -94,11 +94,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
                 et.setText(sdf.format(t));
                 return true;
-            case GOAL_COUNT:
+            case CURRENT_COUNT:
                 TextView cc = (TextView) view;
                 cc.setText(cursor.getInt(columnIndex) + " / ");
                 return true;
-            case CURRENT_COUNT:
+            case GOAL_COUNT:
                 TextView gc = (TextView) view;
                 gc.setText(cursor.getInt(columnIndex) + "文字");
                 return true;
@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 MemoContract.Notes._ID,
                 MemoContract.Notes.COL_BODY,
                 MemoContract.Notes.COL_ELAPSED_TIME,
-                MemoContract.Notes.COL_GOAL_COUNT,
                 MemoContract.Notes.COL_CURRENT_COUNT,
+                MemoContract.Notes.COL_GOAL_COUNT,
                 MemoContract.Notes.COL_CREATED,
                 MemoContract.Notes.COL_UPDATED
         };

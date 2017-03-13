@@ -19,8 +19,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,6 +41,7 @@ public class Content extends AppCompatActivity {
     private long noteId;
     private EditText bodyText;
     private TextView countText;
+    private TextView goalCountText;
     private TextView timerView;
     private long elapsedTime = 0L;
     private String initFlag = "0";
@@ -52,15 +55,13 @@ public class Content extends AppCompatActivity {
 
         bodyText = (EditText) findViewById(R.id.bodyText);
         countText = (TextView) findViewById(R.id.countText);
+        goalCountText = (TextView) findViewById(R.id.goalCountText);
         timerView = (TextView) findViewById(R.id.timerView);
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        CountDialogFragment newFragment = new CountDialogFragment();
-        newFragment.show(getSupportFragmentManager(), "count");
 
         Intent intent = getIntent();
         noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
@@ -71,6 +72,8 @@ public class Content extends AppCompatActivity {
             }
             countText.setText("0");
             timerView.setText("00:00:00");
+            bodyText.setHint("入力開始でタイマー始動");
+            showDialog();
         } else {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("Edit Note");
@@ -82,7 +85,8 @@ public class Content extends AppCompatActivity {
 
             String[] projection = {
                     MemoContract.Notes.COL_BODY,
-                    MemoContract.Notes.COL_ELAPSED_TIME
+                    MemoContract.Notes.COL_ELAPSED_TIME,
+                    MemoContract.Notes.COL_GOAL_COUNT
             };
 
             Cursor c = getContentResolver().query(
@@ -97,6 +101,7 @@ public class Content extends AppCompatActivity {
             if (c != null) {
                 c.moveToFirst();
                 bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
+                goalCountText.setText("/" + c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) + "文字");
                 elapsedTime = c.getInt(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -106,12 +111,11 @@ public class Content extends AppCompatActivity {
         }
 
         bodyText.setSelection(bodyText.length());
-        countText.setText(String.valueOf(bodyText.length()) + "文字");
+        countText.setText(String.valueOf(bodyText.length()));
 
         bodyText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                bodyText.setHint();
             }
 
             @Override
@@ -119,12 +123,13 @@ public class Content extends AppCompatActivity {
                 if (initFlag.equals("0")) {
                     startTimer();
                     initFlag = "1";
+                    bodyText.setHint("");
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                countText.setText(String.valueOf(bodyText.length()) + "文字");
+                countText.setText(String.valueOf(bodyText.length()));
             }
         });
     }
@@ -155,6 +160,9 @@ public class Content extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.N)
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
+        String str = goalCountText.getText().toString().substring(1, goalCountText.length()-2);
+        System.out.println(str);
+        int gCount = Integer.valueOf(str);
         long saveTime = SystemClock.elapsedRealtime() - startTime + elapsedTime;
 //        long updated = System.currentTimeMillis();
 
@@ -162,6 +170,7 @@ public class Content extends AppCompatActivity {
         values.put(MemoContract.Notes.COL_BODY, body);
         values.put(MemoContract.Notes.COL_ELAPSED_TIME, saveTime);
         values.put(MemoContract.Notes.COL_CURRENT_COUNT, body.length());
+        values.put(MemoContract.Notes.COL_GOAL_COUNT, gCount);
         values.put(MemoContract.Notes.COL_UPDATED, getNowDate());
 
         if (noteId == 0L) {
@@ -239,7 +248,7 @@ public class Content extends AppCompatActivity {
     }
 
     /**
-     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得する.<br>
+     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得
      */
     public static String getNowDate(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
@@ -247,12 +256,43 @@ public class Content extends AppCompatActivity {
         return sdf.format(date);
     }
     /**
-     * Long の数字を日付フォーマットに変換します。
+     * Long の数字を日付フォーマットに変換
      * @param date Long の数字
      * @return "yyyy/MM/dd HH:mm" フォーマットの文字列
      */
     public static String convertLongToYyyymmddhhmm(Long date) {
         return yyyymmddhhmm.format(new Date(date));
+    }
+
+    /**
+     * 文字数設定用のダイアログを表示
+     */
+    public void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        // レイアウトファイルからビューを取得
+        final View dialogView = inflater.inflate(R.layout.input_count_dialog, null);
+
+        builder.setView(dialogView)
+                .setTitle("目標文字数の設定")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText editText = (EditText) dialogView.findViewById(R.id.dialog_edit);
+                        goalCountText.setText("/" + editText.getText() + "文字");
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        // ダイアログ外タップで消えないように設定
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 }
 
