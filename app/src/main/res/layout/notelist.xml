@@ -11,6 +11,8 @@
     <TextView
         android:id="@+id/bodyText"
         android:textSize="18sp"
+        android:maxLines="3"
+        android:ellipsize="end"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

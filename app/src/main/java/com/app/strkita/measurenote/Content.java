@@ -161,11 +161,11 @@ public class Content extends AppCompatActivity {
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
         String str = goalCountText.getText().toString().substring(1, goalCountText.length()-2);
-        System.out.println(str);
         int gCount = Integer.valueOf(str);
-        long saveTime = SystemClock.elapsedRealtime() - startTime + elapsedTime;
-//        long updated = System.currentTimeMillis();
-
+        long saveTime = elapsedTime;
+        if (initFlag.equals("1")) {
+            saveTime = SystemClock.elapsedRealtime() - startTime + elapsedTime;
+        }
         ContentValues values = new ContentValues();
         values.put(MemoContract.Notes.COL_BODY, body);
         values.put(MemoContract.Notes.COL_ELAPSED_TIME, saveTime);
