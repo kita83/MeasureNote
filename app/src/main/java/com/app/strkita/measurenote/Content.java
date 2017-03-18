@@ -162,6 +162,7 @@ public class Content extends AppCompatActivity {
         String body = bodyText.getText().toString().trim();
         String str = goalCountText.getText().toString().substring(1, goalCountText.length()-2);
         int gCount = Integer.valueOf(str);
+        // タイマーが始動していなければ経過時間変更しない
         long saveTime = elapsedTime;
         if (initFlag.equals("1")) {
             saveTime = SystemClock.elapsedRealtime() - startTime + elapsedTime;
@@ -221,8 +222,6 @@ public class Content extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-//        MenuItem deleteItem = menu.findItem(R.id.action_delete);
-//        if (noteId == 0L) deleteItem.setVisible(false);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -239,7 +238,10 @@ public class Content extends AppCompatActivity {
                 deleteNote();
                 break;
             case android.R.id.home:
-                saveNote();
+                // テキストが空の場合、保存しない
+                if (bodyText.length() != 0) {
+                    saveNote();
+                }
                 stopTimer();
                 NavUtils.navigateUpFromSameTask(this);
                 return true;

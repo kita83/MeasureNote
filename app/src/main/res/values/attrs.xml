@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RingView">
+        <attr name="start_angle" format="float|reference"/>
+        <attr name="draw_angle" format="float|reference"/>
+        <attr name="primary_line_color" format="color|reference"/>
+        <attr name="secondary_line_color" format="color|reference"/>
+        <attr name="stroke_width" format="dimension|reference"/>
+    </declare-styleable>
+</resources>
