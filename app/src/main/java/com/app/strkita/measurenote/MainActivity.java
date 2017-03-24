@@ -3,6 +3,8 @@ package com.app.strkita.measurenote;
 import android.content.Intent;
 import android.database.Cursor;
 import java.text.SimpleDateFormat;
+
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -14,8 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.TimeZone;
@@ -34,6 +36,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(this, Content.class);
+                startActivity(intent);
+            }
+        });
 
         String[] from = {
                 MemoContract.Notes.COL_BODY,
@@ -63,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         adapter.setViewBinder(this);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
-        RingView ringView = (RingView) findViewById(R.id.view_ring);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
