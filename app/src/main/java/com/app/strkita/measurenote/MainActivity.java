@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(this, Content.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, Content.class);
+//                startActivity(intent);
             }
         });
 
