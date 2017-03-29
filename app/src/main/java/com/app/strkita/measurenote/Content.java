@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -18,14 +17,12 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -48,7 +45,6 @@ public class Content extends AppCompatActivity {
     private TextView timerView;
     private long elapsedTime = 0L;
     private String initFlag = "0";
-    static DateFormat yyyymmddhhmm = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
 
 
     @Override
@@ -75,7 +71,7 @@ public class Content extends AppCompatActivity {
             }
             countText.setText("0");
             timerView.setText("00:00:00");
-            bodyText.setHint("入力開始でタイマー始動");
+            bodyText.setHint(R.string.hint_start_timer);
             showDialog();
         } else {
             if (getSupportActionBar() != null) {
@@ -241,11 +237,6 @@ public class Content extends AppCompatActivity {
                 deleteNote();
                 break;
             case android.R.id.home:
-                // テキストが空の場合、保存しない
-                if (bodyText.length() != 0) {
-                    saveNote();
-                }
-                stopTimer();
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
@@ -259,14 +250,6 @@ public class Content extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
         Date date = new Date(System.currentTimeMillis());
         return sdf.format(date);
-    }
-    /**
-     * Long の数字を日付フォーマットに変換
-     * @param date Long の数字
-     * @return "yyyy/MM/dd HH:mm" フォーマットの文字列
-     */
-    public static String convertLongToYyyymmddhhmm(Long date) {
-        return yyyymmddhhmm.format(new Date(date));
     }
 
     /**
@@ -315,6 +298,7 @@ public class Content extends AppCompatActivity {
             saveNote();
         }
         stopTimer();
+        initFlag = "0";
     }
 }
 
