@@ -45,6 +45,7 @@ public class Content extends AppCompatActivity {
     private TextView timerView;
     private long elapsedTime = 0L;
     private String initFlag = "0";
+    private String goalFlag = "0";
 
 
     @Override
@@ -72,7 +73,7 @@ public class Content extends AppCompatActivity {
             countText.setText("0");
             timerView.setText("00:00:00");
             bodyText.setHint(R.string.hint_start_timer);
-            showDialog();
+            showCountSetDialog();
         } else {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("Edit Note");
@@ -123,6 +124,13 @@ public class Content extends AppCompatActivity {
                     startTimer();
                     initFlag = "1";
                     bodyText.setHint("");
+                }
+                if (goalFlag.equals("0")) {
+                    String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length()-2);
+                    if (bodyText.length() == Integer.parseInt(gText)) {
+                        goalFlag = "1";
+                        showGetGoalDialog();
+                    }
                 }
             }
 
@@ -251,11 +259,26 @@ public class Content extends AppCompatActivity {
         Date date = new Date(System.currentTimeMillis());
         return sdf.format(date);
     }
-
     /**
+     * 文字数達成時表示用のダイアログを表示
+    */
+    public void showGetGoalDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("ゴール！")
+                .setMessage("目標文字数に到達しました。")
+                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+     /**
      * 文字数設定用のダイアログを表示
      */
-    public void showDialog() {
+    public void showCountSetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         // レイアウトファイルからビューを取得
@@ -263,14 +286,14 @@ public class Content extends AppCompatActivity {
 
         builder.setView(dialogView)
                 .setTitle("目標文字数の設定")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         EditText editText = (EditText) dialogView.findViewById(R.id.dialog_edit);
                         goalCountText.setText("/" + editText.getText() + "文字");
                     }
                 })
-                .setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.Later, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
