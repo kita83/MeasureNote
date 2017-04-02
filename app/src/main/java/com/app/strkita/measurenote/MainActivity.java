@@ -1,10 +1,17 @@
 package com.app.strkita.measurenote;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.FragmentManager;
+import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import java.text.SimpleDateFormat;
 
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -12,6 +19,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +27,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.app.AlertDialog.Builder;
 
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SimpleCursorAdapter.ViewBinder {
 
+    private static final String DEBUG = "DEBUG";
     private SimpleCursorAdapter adapter;
     public final static String EXTRA_ID = "com.app.strkita.measurenote.ID";
     private static final int BODY = 1;
@@ -52,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 MemoContract.Notes.COL_ELAPSED_TIME,
                 MemoContract.Notes.COL_CURRENT_COUNT,
                 MemoContract.Notes.COL_GOAL_COUNT,
-//                MemoContract.Notes.COL_CREATED,
         };
 
         int[] to = {
@@ -60,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 R.id.elapsed_time,
                 R.id.current_count,
                 R.id.goal_count,
-//                R.id.updated,
         };
 
         adapter = new SimpleCursorAdapter(
@@ -73,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         );
 
         adapter.setViewBinder(this);
-        ListView listView = (ListView) findViewById(R.id.listView);
+        final ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
 //        LayoutInflater factory = LayoutInflater.from(this);
@@ -94,9 +103,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-
         getSupportLoaderManager().initLoader(0, null, this);
-
 
     }
 
@@ -108,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             case ELAPSED_TIME:
                 TextView et = (TextView) view;
-                // -9時間したミリ秒を取得
                 long t = cursor.getLong(columnIndex);
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -122,10 +128,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 TextView gc = (TextView) view;
                 gc.setText(cursor.getInt(columnIndex) + "文字");
                 return true;
-//            case UPDATED:
-//                TextView ud = (TextView) view;
-//                ud.setText(cursor.getString(columnIndex));
-//                return true;
             default:
                 break;
         }
@@ -176,5 +178,59 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
+    }
+
+
+    // FragmentManagerでDialogを管理するクラス
+//    private void showDialogFragment(String selectedItem) {
+//        FragmentManager manager = getFragmentManager();
+//        DeleteDialog dialog = new DeleteDialog();
+//        dialog.setSelectedItem(selectedItem);
+//
+//        dialog.show();
+//    }
+//
+//    public static class DeleteDialog extends DialogFragment {
+//
+//        private static final String DEBUG = "DEBUG";
+//        private String selectedItem = null;
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            Log.d(DEBUG, "onCreateDialog()");
+//
+//            Builder builder = new AlertDialog.Builder(getActivity());
+//            builder.setTitle("このノートを削除します");
+//            builder.setMessage("本当に削除しますか？");
+//            builder.setNegativeButton("Cancel", null);
+//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    MainActivity activity = (MainActivity) getActivity();
+//                    activity.removeItem(selectedItem);
+//                }
+//            });
+//            AlertDialog dialog = builder.create();
+//            return dialog;
+//        }
+//
+//        // 選択したアイテムをセットする．
+//        // HACK:削除ダイアログ自身に選択したアイテムを渡せないため，
+//        // ダイアログをユーザが呼び出した際に，Activityで選択した項目を保持しておく．
+//        public void setSelectedItem(String selectedItem) {
+//            Log.d(DEBUG, "setSelectedItem() - item : " + selectedItem);
+//            this.selectedItem = selectedItem;
+//        }
+//    }
+//
+//    // 選択したアイテムを削除する．
+//    protected void removeItem(String selectedItem) {
+//        Log.d(DEBUG, "doPositiveClick() - item : " + selectedItem);
+//        adapter.remove(selectedItem);
+//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

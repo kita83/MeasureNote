@@ -26,11 +26,11 @@
             <!--android:layout_gravity="top"-->
             <!--android:layout_width="24dp"-->
             <!--android:layout_height="24dp"/>-->
-        <com.app.strkita.measurenote.SimpleGaugeView
-            android:id="@+id/simple_gauge"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="2dp" />
+        <!--<com.app.strkita.measurenote.SimpleGaugeView-->
+            <!--android:id="@+id/simple_gauge"-->
+            <!--android:layout_width="24dp"-->
+            <!--android:layout_height="24dp"-->
+            <!--android:layout_margin="2dp" />-->
         <TextView
             android:id="@+id/bodyText"
             android:textSize="18sp"

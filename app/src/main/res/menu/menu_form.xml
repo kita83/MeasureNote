@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.app.strkita.measurenote.Content">
     <item
-        android:id="@+id/action_stop"
+        android:id="@+id/action_pause"
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_media_pause"
         android:title="@string/action_stop"

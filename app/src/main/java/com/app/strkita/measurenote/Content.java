@@ -26,10 +26,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static android.R.drawable.ic_media_pause;
+import static android.R.drawable.ic_media_play;
 
 public class Content extends AppCompatActivity {
 
@@ -43,9 +47,11 @@ public class Content extends AppCompatActivity {
     private TextView countText;
     private TextView goalCountText;
     private TextView timerView;
+    private MenuItem menuItem;
     private long elapsedTime = 0L;
     private String initFlag = "0";
     private String goalFlag = "0";
+    private String pauseFlag = "0";
 
 
     @Override
@@ -57,8 +63,9 @@ public class Content extends AppCompatActivity {
         countText = (TextView) findViewById(R.id.countText);
         goalCountText = (TextView) findViewById(R.id.goalCountText);
         timerView = (TextView) findViewById(R.id.timerView);
+        menuItem = (MenuItem) findViewById(R.id.action_pause);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -71,7 +78,7 @@ public class Content extends AppCompatActivity {
                 getSupportActionBar().setTitle("New Note");
             }
             countText.setText("0");
-            timerView.setText("00:00:00");
+            timerView.setText(R.string.default_time);
             bodyText.setHint(R.string.hint_start_timer);
             showCountSetDialog();
         } else {
@@ -121,8 +128,11 @@ public class Content extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (initFlag.equals("0")) {
+                    // 起動してからの経過時間（ミリ秒）
+                    startTime = SystemClock.elapsedRealtime();
                     startTimer();
                     initFlag = "1";
+                    pauseFlag = "0";
                     bodyText.setHint("");
                 }
                 if (goalFlag.equals("0")) {
@@ -205,8 +215,7 @@ public class Content extends AppCompatActivity {
     }
 
     public void startTimer() {
-        // 起動してからの経過時間（ミリ秒）
-        startTime = SystemClock.elapsedRealtime();
+
 
         // 一定時間ごとに現在の経過時間を表示
         updateTimer = new Runnable() {
@@ -241,6 +250,21 @@ public class Content extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_pause:
+                if ("0".equals(pauseFlag)) {
+                    stopTimer();
+                    elapsedTime = elapsedTime + (SystemClock.elapsedRealtime() - startTime);
+                    item.setIcon(ic_media_play);
+                    initFlag = "0";
+                    pauseFlag = "1";
+                    Toast.makeText(this, "一時停止", Toast.LENGTH_SHORT).show();
+                } else {
+                    startTimer();
+                    item.setIcon(ic_media_pause);
+                    pauseFlag = "0";
+                    Toast.makeText(this, "再開", Toast.LENGTH_SHORT).show();
+                }
+                break;
             case R.id.action_delete:
                 deleteNote();
                 break;
