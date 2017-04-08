@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,19 +38,16 @@ import static android.R.drawable.ic_media_play;
 
 public class Content extends AppCompatActivity {
 
-    private long startTime;
-
-    private Handler handler = new Handler();
-    private Runnable updateTimer;
-
     private long noteId;
     private EditText bodyText;
     private TextView countText;
     private TextView goalCountText;
-    private TextView timerView;
-    private MenuItem menuItem;
+    private Chronometer timerView;
     private long elapsedTime = 0L;
-    private String initFlag = "0";
+    private long pausedTime = 0L;
+    private long awayTime = 0L;
+    private long saveTime = 0L;
+    private String initFlag = "1";
     private String goalFlag = "0";
     private String pauseFlag = "0";
 
@@ -62,8 +60,7 @@ public class Content extends AppCompatActivity {
         bodyText = (EditText) findViewById(R.id.bodyText);
         countText = (TextView) findViewById(R.id.countText);
         goalCountText = (TextView) findViewById(R.id.goalCountText);
-        timerView = (TextView) findViewById(R.id.timerView);
-        menuItem = (MenuItem) findViewById(R.id.action_pause);
+        timerView = (Chronometer) findViewById(R.id.timerView);
 
         final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -73,18 +70,22 @@ public class Content extends AppCompatActivity {
         Intent intent = getIntent();
         noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
 
+        // 新規作成
         if (noteId == 0) {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("New Note");
             }
             countText.setText("0");
-            timerView.setText(R.string.default_time);
             bodyText.setHint(R.string.hint_start_timer);
+            // 文字数設定ダイアログ表示
             showCountSetDialog();
-        } else {
+        }
+        // 編集
+        else {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("Edit Note");
             }
+
             Uri uri = ContentUris.withAppendedId(
                     NoteContentProvider.CONTENT_URI,
                     noteId
@@ -104,20 +105,25 @@ public class Content extends AppCompatActivity {
                     null
             );
 
-            // 経過時間を取得
+            // 初期値のセット
             if (c != null) {
                 c.moveToFirst();
+                // 本文
                 bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
+                // 目標文字数
                 goalCountText.setText("/" + c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) + "文字");
+                // 経過時間
                 elapsedTime = c.getInt(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
-                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("HH:mm:ss", Locale.US);
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
                 timerView.setText(sdf.format(elapsedTime));
                 c.close();
             }
         }
 
+        // 初期カーソル位置を文末に移動
         bodyText.setSelection(bodyText.length());
+        // 現在の文字数をセット
         countText.setText(String.valueOf(bodyText.length()));
 
         bodyText.addTextChangedListener(new TextWatcher() {
@@ -127,26 +133,37 @@ public class Content extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (initFlag.equals("0")) {
-                    // 起動してからの経過時間（ミリ秒）
-                    startTime = SystemClock.elapsedRealtime();
-                    startTimer();
-                    initFlag = "1";
-                    pauseFlag = "0";
+                // 入力開始で計測開始
+                if ("1".equals(initFlag)) {
+                    timerView.setBase(SystemClock.elapsedRealtime() - elapsedTime);
+                    timerView.start();
+                    initFlag = "0";
                     bodyText.setHint("");
                 }
-                if (goalFlag.equals("0")) {
+
+                // 計測再開
+                if ("1".equals(pauseFlag)) {
+                    awayTime = SystemClock.elapsedRealtime() - pausedTime;
+                    timerView.setBase(timerView.getBase() + awayTime);
+                    timerView.start();
+                    pauseFlag = "0";
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // 文字数反映
+                countText.setText(String.valueOf(bodyText.length()));
+
+                // 目標文字数に達した時点でダイアログ表示(初回のみ)
+                if ("0".equals(goalFlag)) {
                     String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length()-2);
                     if (bodyText.length() == Integer.parseInt(gText)) {
                         goalFlag = "1";
                         showGetGoalDialog();
                     }
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                countText.setText(String.valueOf(bodyText.length()));
             }
         });
     }
@@ -174,16 +191,21 @@ public class Content extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * 編集データを保存
+     */
     @TargetApi(Build.VERSION_CODES.N)
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
         String str = goalCountText.getText().toString().substring(1, goalCountText.length()-2);
         int gCount = Integer.valueOf(str);
-        // タイマーが始動していなければ経過時間変更しない
-        long saveTime = elapsedTime;
-        if (initFlag.equals("1")) {
-            saveTime = SystemClock.elapsedRealtime() - startTime + elapsedTime;
-        }
+        saveTime = Long.parseLong(timerView.getText().toString());
+//        if ("1".equals(initFlag)) {
+//            saveTime = elapsedTime;
+//        } else {
+//            awayTime = SystemClock.elapsedRealtime() - pausedTime;
+//            saveTime = SystemClock.elapsedRealtime() - timerView.getBase() - awayTime;
+//        }
         ContentValues values = new ContentValues();
         values.put(MemoContract.Notes.COL_BODY, body);
         values.put(MemoContract.Notes.COL_ELAPSED_TIME, saveTime);
@@ -192,13 +214,13 @@ public class Content extends AppCompatActivity {
         values.put(MemoContract.Notes.COL_UPDATED, getNowDate());
 
         if (noteId == 0L) {
-            // new Note
+            // 新規追加
             getContentResolver().insert(
                     NoteContentProvider.CONTENT_URI,
                     values
             );
         } else {
-            // updated NOTE
+            // 更新
             Uri uri = ContentUris.withAppendedId(
                     NoteContentProvider.CONTENT_URI,
                     noteId
@@ -212,28 +234,6 @@ public class Content extends AppCompatActivity {
             );
         }
         finish();
-    }
-
-    public void startTimer() {
-
-
-        // 一定時間ごとに現在の経過時間を表示
-        updateTimer = new Runnable() {
-            @Override
-            public void run() {
-                long t = SystemClock.elapsedRealtime() - startTime + elapsedTime;
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.US);
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-                timerView.setText(sdf.format(t));
-                handler.removeCallbacks(updateTimer);
-                handler.postDelayed(updateTimer, 10);
-            }
-        };
-        handler.postDelayed(updateTimer, 10);
-    }
-
-    public void stopTimer() {
-        handler.removeCallbacks(updateTimer);
     }
 
     @Override
@@ -250,24 +250,29 @@ public class Content extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // 一時停止ボタン
             case R.id.action_pause:
                 if ("0".equals(pauseFlag)) {
-                    stopTimer();
-                    elapsedTime = elapsedTime + (SystemClock.elapsedRealtime() - startTime);
+                    timerView.stop();
+                    pausedTime = SystemClock.elapsedRealtime();
                     item.setIcon(ic_media_play);
-                    initFlag = "0";
                     pauseFlag = "1";
                     Toast.makeText(this, "一時停止", Toast.LENGTH_SHORT).show();
                 } else {
-                    startTimer();
+                    awayTime = SystemClock.elapsedRealtime() - pausedTime;
+                    // 計測起点を再セット
+                    timerView.setBase(timerView.getBase() + awayTime);
+                    timerView.start();
                     item.setIcon(ic_media_pause);
                     pauseFlag = "0";
                     Toast.makeText(this, "再開", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            // 削除ボタン
             case R.id.action_delete:
                 deleteNote();
                 break;
+            // 戻るボタン
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -276,7 +281,7 @@ public class Content extends AppCompatActivity {
     }
 
     /**
-     * 現在日時をyyyy/MM/dd HH:mm:ss形式で取得
+     * 現在日時を取得
      */
     public static String getNowDate(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
@@ -344,8 +349,8 @@ public class Content extends AppCompatActivity {
         if (bodyText.length() != 0) {
             saveNote();
         }
-        stopTimer();
-        initFlag = "0";
+        timerView.stop();
+        initFlag = "1";
     }
 }
 
