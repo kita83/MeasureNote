@@ -2,6 +2,7 @@
     <string name="AppName">MeasureNote</string>
     <string name="action_add">ADD</string>
     <string name="action_stop">STOP</string>
+    <string name="action_start">START</string>
     <string name="action_delete">DELETE</string>
     <string name="action_setting">Setting</string>
     <string name="hint_start_timer">入力開始でタイマー始動</string>

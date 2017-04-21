@@ -7,18 +7,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-
-import java.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
+import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -112,8 +113,16 @@ public class Content extends AppCompatActivity {
                 bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
                 // 目標文字数
                 goalCountText.setText("/" + c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) + "文字");
+                // すでに目標に達していた場合、ダイアログ表示済とする
+                if (bodyText.length() >= c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) {
+                    goalFlag = "1";
+                    int green = getResources().getColor(R.color.colorGreen);
+                    goalCountText.setTextColor(green);
+                    countText.setTextColor(green);
+                }
                 // 経過時間
-                elapsedTime = c.getInt(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
+                Log.d("debug: ", c.getString(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME)));
+                elapsedTime = c.getLong(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
                 timerView.setText(sdf.format(elapsedTime));
@@ -156,13 +165,23 @@ public class Content extends AppCompatActivity {
                 // 文字数反映
                 countText.setText(String.valueOf(bodyText.length()));
 
+                String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length()-2);
+                int green = getResources().getColor(R.color.colorGreen);
+                int black = getResources().getColor(R.color.colorBlack);
+
                 // 目標文字数に達した時点でダイアログ表示(初回のみ)
                 if ("0".equals(goalFlag)) {
-                    String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length()-2);
-                    if (bodyText.length() == Integer.parseInt(gText)) {
+                    if (bodyText.length() >= Integer.parseInt(gText)) {
                         goalFlag = "1";
+                        goalCountText.setTextColor(green);
                         showGetGoalDialog();
                     }
+                }
+
+                if (bodyText.length() >= Integer.parseInt(gText)) {
+                    countText.setTextColor(green);
+                } else {
+                    countText.setTextColor(black);
                 }
             }
         });
@@ -199,13 +218,20 @@ public class Content extends AppCompatActivity {
         String body = bodyText.getText().toString().trim();
         String str = goalCountText.getText().toString().substring(1, goalCountText.length()-2);
         int gCount = Integer.valueOf(str);
-        saveTime = Long.parseLong(timerView.getText().toString());
-//        if ("1".equals(initFlag)) {
-//            saveTime = elapsedTime;
-//        } else {
-//            awayTime = SystemClock.elapsedRealtime() - pausedTime;
-//            saveTime = SystemClock.elapsedRealtime() - timerView.getBase() - awayTime;
-//        }
+
+        // 一時停止中の場合、計測起点をずらす
+        if ("1".equals(pauseFlag)) {
+            awayTime = SystemClock.elapsedRealtime() - pausedTime;
+            timerView.setBase(timerView.getBase() + awayTime);
+        }
+
+        // ミリ秒で経過時間を取得
+        if ("0".equals(initFlag)) {
+            saveTime = SystemClock.elapsedRealtime() - timerView.getBase();
+        } else {
+            saveTime = elapsedTime;
+        }
+
         ContentValues values = new ContentValues();
         values.put(MemoContract.Notes.COL_BODY, body);
         values.put(MemoContract.Notes.COL_ELAPSED_TIME, saveTime);
@@ -214,13 +240,11 @@ public class Content extends AppCompatActivity {
         values.put(MemoContract.Notes.COL_UPDATED, getNowDate());
 
         if (noteId == 0L) {
-            // 新規追加
             getContentResolver().insert(
                     NoteContentProvider.CONTENT_URI,
                     values
             );
         } else {
-            // 更新
             Uri uri = ContentUris.withAppendedId(
                     NoteContentProvider.CONTENT_URI,
                     noteId
@@ -250,15 +274,23 @@ public class Content extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // 一時停止ボタン
             case R.id.action_pause:
-                if ("0".equals(pauseFlag)) {
+                // 未カウント状態の場合
+                if ("1".equals(initFlag)) {
+                    timerView.setBase(SystemClock.elapsedRealtime() - elapsedTime);
+                    timerView.start();
+                    item.setIcon(ic_media_pause);
+                    initFlag = "0";
+                    bodyText.setHint("");
+                }
+                else if ("0".equals(pauseFlag)) {
                     timerView.stop();
                     pausedTime = SystemClock.elapsedRealtime();
                     item.setIcon(ic_media_play);
                     pauseFlag = "1";
                     Toast.makeText(this, "一時停止", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else if ("1".equals(pauseFlag)) {
                     awayTime = SystemClock.elapsedRealtime() - pausedTime;
                     // 計測起点を再セット
                     timerView.setBase(timerView.getBase() + awayTime);

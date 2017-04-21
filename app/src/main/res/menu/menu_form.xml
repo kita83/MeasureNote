@@ -6,8 +6,8 @@
     <item
         android:id="@+id/action_pause"
         android:orderInCategory="100"
-        android:icon="@android:drawable/ic_media_pause"
-        android:title="@string/action_stop"
+        android:icon="@android:drawable/ic_media_play"
+        android:title="@string/action_start"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_delete"

@@ -1,41 +1,28 @@
 package com.app.strkita.measurenote;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.FragmentManager;
-import android.content.ContentUris;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import java.text.SimpleDateFormat;
-
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.app.AlertDialog.Builder;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SimpleCursorAdapter.ViewBinder {
 
-    private static final String DEBUG = "DEBUG";
     private SimpleCursorAdapter adapter;
     public final static String EXTRA_ID = "com.app.strkita.measurenote.ID";
     private static final int BODY = 1;
@@ -85,11 +72,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         final ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
-//        LayoutInflater factory = LayoutInflater.from(this);
-//        View layInfView = factory.inflate(R.layout.notelist, null);
-//        SimpleGaugeView simpleGaugeView = (SimpleGaugeView) layInfView.findViewById(R.id.simple_gauge);
-//        simpleGaugeView.setData(90, "%", ContextCompat.getColor(this, R.color.colorAccent));
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(
@@ -107,26 +89,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
-    public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+    public boolean setViewValue(View view, Cursor c, int columnIndex) {
         switch (columnIndex) {
             case BODY:
                 TextView bd = (TextView) view;
-                bd.setText(cursor.getString(columnIndex));
+                bd.setText(c.getString(columnIndex));
                 return true;
             case ELAPSED_TIME:
+                Log.d("debug: ", String.valueOf(c.getLong(columnIndex)));
                 TextView et = (TextView) view;
-                long t = cursor.getLong(columnIndex);
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.US);
+                long t = c.getLong(columnIndex);
+                SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
                 et.setText(sdf.format(t));
                 return true;
             case CURRENT_COUNT:
                 TextView cc = (TextView) view;
-                cc.setText(cursor.getInt(columnIndex) + " / ");
+                cc.setText(c.getInt(columnIndex) + " / ");
                 return true;
             case GOAL_COUNT:
                 TextView gc = (TextView) view;
-                gc.setText(cursor.getInt(columnIndex) + "文字");
+                gc.setText(c.getInt(columnIndex) + "文字");
                 return true;
             default:
                 break;

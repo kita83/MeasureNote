@@ -17,7 +17,7 @@ import java.util.Date;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MemoOpenHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "measurenote.db";
-    public static final int DB_VERSION = 9;
+    public static final int DB_VERSION = 10;
     public static final String CREATE_TABLE =
             "create table notes (" +
                     MemoContract.Notes._ID + " integer primary key autoincrement, " +
