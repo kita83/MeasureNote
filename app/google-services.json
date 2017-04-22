@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "546910619066",
+    "firebase_url": "https://measurenote-7b91d.firebaseio.com",
+    "project_id": "measurenote-7b91d",
+    "storage_bucket": "measurenote-7b91d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546910619066:android:955716e276f66e08",
+        "android_client_info": {
+          "package_name": "com.app.strkita.measurenote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546910619066-n0kos2quk7qq0fsrf7rp1r5qcm8glk1d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJImp_QbJa5VVL-51j0OyHStP3Nt73e5o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
