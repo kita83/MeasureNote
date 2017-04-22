@@ -1,13 +1,17 @@
 package com.app.strkita.measurenote;
 
+import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -95,8 +99,45 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(
+                    AdapterView<?> parent,
+                    View view,
+                    int position,
+                    long id) {
+                showDeleteDialog(id);
+                return true;
+            }
+        });
         getSupportLoaderManager().initLoader(0, null, this);
 
+    }
+
+    /**
+     * 削除用ダイアログ
+     */
+    public void showDeleteDialog(long id) {
+        final long _id = id;
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("このノートを削除しますか？")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = ContentUris.withAppendedId(
+                                NoteContentProvider.CONTENT_URI,
+                                _id
+                        );
+                        getContentResolver().delete(
+                                uri,
+                                MemoContract.Notes._ID + " = ?",
+                                new String[] { Long.toString(_id) }
+                        );
+                    }
+                })
+                .show();
     }
 
     public boolean setViewValue(View view, Cursor c, int columnIndex) {
@@ -106,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 bd.setText(c.getString(columnIndex));
                 return true;
             case ELAPSED_TIME:
-                Log.d("debug: ", String.valueOf(c.getLong(columnIndex)));
                 TextView et = (TextView) view;
                 long t = c.getLong(columnIndex);
                 SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.US);
@@ -172,55 +212,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swapCursor(null);
     }
-
-
-    // FragmentManagerでDialogを管理するクラス
-//    private void showDialogFragment(String selectedItem) {
-//        FragmentManager manager = getFragmentManager();
-//        DeleteDialog dialog = new DeleteDialog();
-//        dialog.setSelectedItem(selectedItem);
-//
-//        dialog.show();
-//    }
-//
-//    public static class DeleteDialog extends DialogFragment {
-//
-//        private static final String DEBUG = "DEBUG";
-//        private String selectedItem = null;
-//
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            Log.d(DEBUG, "onCreateDialog()");
-//
-//            Builder builder = new AlertDialog.Builder(getActivity());
-//            builder.setTitle("このノートを削除します");
-//            builder.setMessage("本当に削除しますか？");
-//            builder.setNegativeButton("Cancel", null);
-//            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    MainActivity activity = (MainActivity) getActivity();
-//                    activity.removeItem(selectedItem);
-//                }
-//            });
-//            AlertDialog dialog = builder.create();
-//            return dialog;
-//        }
-//
-//        // 選択したアイテムをセットする．
-//        // HACK:削除ダイアログ自身に選択したアイテムを渡せないため，
-//        // ダイアログをユーザが呼び出した際に，Activityで選択した項目を保持しておく．
-//        public void setSelectedItem(String selectedItem) {
-//            Log.d(DEBUG, "setSelectedItem() - item : " + selectedItem);
-//            this.selectedItem = selectedItem;
-//        }
-//    }
-//
-//    // 選択したアイテムを削除する．
-//    protected void removeItem(String selectedItem) {
-//        Log.d(DEBUG, "doPositiveClick() - item : " + selectedItem);
-//        adapter.remove(selectedItem);
-//    }
 
     @Override
     protected void onDestroy() {

@@ -35,12 +35,4 @@ public class ListItems {
     public int getGoalCount() {
         return goalCount;
     }
-
-    public int getCreated() {
-        return created;
-    }
-
-    public int getUpdated() {
-        return updated;
-    }
 }

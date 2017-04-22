@@ -11,8 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -121,7 +119,6 @@ public class Content extends AppCompatActivity {
                     countText.setTextColor(green);
                 }
                 // 経過時間
-                Log.d("debug: ", c.getString(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME)));
                 elapsedTime = c.getLong(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
                 java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("mm:ss", Locale.US);
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -202,7 +199,7 @@ public class Content extends AppCompatActivity {
                         getContentResolver().delete(
                                 uri,
                                 MemoContract.Notes._ID + " = ?",
-                                new String[] { Long.toString(noteId)}
+                                new String[] { Long.toString(noteId) }
                         );
                         finish();
                     }
