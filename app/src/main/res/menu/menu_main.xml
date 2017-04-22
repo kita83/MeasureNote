@@ -4,8 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
     <item android:id="@+id/action_settings"
-          android:icon="@android:drawable/ic_menu_manage"
+          android:icon="@mipmap/dots_vertical"
           android:orderInCategory="100"
-          app:showAsAction="ifRoom" />
+          app:showAsAction="ifRoom" >
+          <menu>
+              <item
+                  android:id="@+id/change_font_size"
+                  android:title="@string/font_size"
+                  android:orderInCategory="0" />
+              <item
+                  android:id="@+id/change_bg_color"
+                  android:title="@string/background_color"
+                  android:orderInCategory="1" />
+          </menu>
+    </item>
 
 </menu>

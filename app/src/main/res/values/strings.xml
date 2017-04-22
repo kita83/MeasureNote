@@ -11,4 +11,6 @@
     <string name="OK">OK</string>
     <string name="Later">Later</string>
     <string name="default_time">00:00:00</string>
+    <string name="font_size">文字の大きさ</string>
+    <string name="background_color">背景色</string>
 </resources>
