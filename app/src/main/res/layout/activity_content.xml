@@ -17,6 +17,8 @@
         <Chronometer
             android:id="@+id/timerView"
             android:gravity="start"
+            android:textColor="?android:textColorSecondary"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"/>
@@ -30,11 +32,15 @@
             <TextView
                 android:id="@+id/countText"
                 android:paddingRight="10dp"
+                android:textSize="14sp"
+                android:textColor="?android:textColorSecondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/goalCountText"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="14sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -43,8 +49,9 @@
     <EditText
         android:id="@+id/bodyText"
         android:inputType="textNoSuggestions|textMultiLine"
-        android:background="#FFFFFF"
         android:gravity="top"
+        android:background="?android:windowBackground"
+        android:textColor="?android:textColorPrimary"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>

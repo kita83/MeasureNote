@@ -37,7 +37,7 @@
         android:elevation="8dp"
         app:borderWidth="0dp"
         app:pressedTranslationZ="12dp"
-        android:tint="@color/colorBlank"
+        android:tint="@color/colorWhite"
         app:backgroundTint="@color/colorAccent"/>
 
 </android.support.design.widget.CoordinatorLayout>

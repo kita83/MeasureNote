@@ -1,5 +1,6 @@
 package com.app.strkita.measurenote;
 
+import android.app.Application;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +14,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int CURRENT_COUNT = 3;
     private static final int GOAL_COUNT = 4;
     private static final int UPDATED = 5;
+    public static final int THEME_LIGHT = 0;
+    public static final int THEME_DARK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
         getSupportLoaderManager().initLoader(0, null, this);
-
     }
 
     /**
@@ -175,6 +176,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.change_font_size :
+
+                break;
+            case R.id.change_bg_color :
+                if (item.isChecked()) {
+                    setTheme(R.style.AppTheme_Light);
+                    item.setChecked(true);
+                } else {
+                    Application application = getApplication();
+                    application.setTheme(R.style.AppTheme_Dark);
+                    item.setChecked(false);
+//                    TextView currentCount = (TextView) findViewById(R.id.current_count);
+//                    TextView goalCount = (TextView) findViewById(R.id.goal_count);
+//                    TextView elapsedTime = (TextView) findViewById(R.id.elapsed_time);
+//
+//                    int gray = getResources().getColor(R.color.colorGray_999);
+//
+//                    currentCount.setTextColor(gray);
+//                    goalCount.setTextColor(gray);
+//                    elapsedTime.setTextColor(gray);
+                }
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -16,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -164,7 +163,7 @@ public class Content extends AppCompatActivity {
 
                 String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length()-2);
                 int green = getResources().getColor(R.color.colorGreen);
-                int black = getResources().getColor(R.color.colorBlack);
+                int black = getResources().getColor(R.color.colorGray_333);
 
                 // 目標文字数に達した時点でダイアログ表示(初回のみ)
                 if ("0".equals(goalFlag)) {
@@ -175,6 +174,7 @@ public class Content extends AppCompatActivity {
                     }
                 }
 
+                // 文字色制御
                 if (bodyText.length() >= Integer.parseInt(gText)) {
                     countText.setTextColor(green);
                 } else {
