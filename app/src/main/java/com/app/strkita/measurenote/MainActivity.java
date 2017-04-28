@@ -2,6 +2,7 @@ package com.app.strkita.measurenote;
 
 import android.app.Application;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -156,11 +158,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 return true;
             case CURRENT_COUNT:
                 TextView cc = (TextView) view;
-                cc.setText(c.getInt(columnIndex) + " / ");
+                cc.setText(c.getString(columnIndex));
                 return true;
             case GOAL_COUNT:
-                TextView gc = (TextView) view;
-                gc.setText(c.getInt(columnIndex) + "文字");
+                if (c.getString(columnIndex) != null) {
+                    TextView gc = (TextView) view;
+                    gc.setText(" / " + c.getString(columnIndex) + "文字");
+                }
                 return true;
             default:
                 break;
@@ -183,20 +187,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.change_bg_color :
                 if (item.isChecked()) {
                     setTheme(R.style.AppTheme_Light);
-                    item.setChecked(true);
-                } else {
-                    Application application = getApplication();
-                    application.setTheme(R.style.AppTheme_Dark);
                     item.setChecked(false);
-//                    TextView currentCount = (TextView) findViewById(R.id.current_count);
-//                    TextView goalCount = (TextView) findViewById(R.id.goal_count);
-//                    TextView elapsedTime = (TextView) findViewById(R.id.elapsed_time);
-//
-//                    int gray = getResources().getColor(R.color.colorGray_999);
-//
-//                    currentCount.setTextColor(gray);
-//                    goalCount.setTextColor(gray);
-//                    elapsedTime.setTextColor(gray);
+                } else {
+//                    TypedValue outValue = new TypedValue();
+//                    getTheme().resolveAttribute(R.attr.colorBackground, outValue, true);
+//                    int resourceId = outValue.resourceId;
+//                    int colorBackGround = getResources().getColor(resourceId);
+//                    item.setChecked(true);
                 }
                 break;
         }

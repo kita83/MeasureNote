@@ -9,8 +9,9 @@
     <string name="no_data">No data available</string>
     <string name="content_activity">content_activity</string>
     <string name="OK">OK</string>
-    <string name="Later">Later</string>
+    <string name="not_set">設定しない</string>
     <string name="default_time">00:00:00</string>
     <string name="font_size">文字の大きさ</string>
     <string name="background_color">背景色</string>
+    <string name="setCount">目標文字数の設定</string>
 </resources>

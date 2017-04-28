@@ -19,5 +19,7 @@ public final class MemoContract {
         public static final String COL_GOAL_COUNT= "goal_count";
         public static final String COL_UPDATED = "updated";
         public static final String COL_CREATED = "created";
+        public static final String NO_GOAL_MODE = "no_goal_mode";
+        public static final String GOAL_MODE = "goal_mode";
     }
 }

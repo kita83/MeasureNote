@@ -17,14 +17,14 @@ import java.util.Date;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MemoOpenHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "measurenote.db";
-    public static final int DB_VERSION = 10;
+    public static final int DB_VERSION = 12;
     public static final String CREATE_TABLE =
             "create table notes (" +
                     MemoContract.Notes._ID + " integer primary key autoincrement, " +
                     MemoContract.Notes.COL_BODY + " text, " +
                     MemoContract.Notes.COL_ELAPSED_TIME + " integer, " +
-                    MemoContract.Notes.COL_CURRENT_COUNT + " integer, " +
-                    MemoContract.Notes.COL_GOAL_COUNT + " integer, " +
+                    MemoContract.Notes.COL_CURRENT_COUNT + " text, " +
+                    MemoContract.Notes.COL_GOAL_COUNT + " text, " +
                     MemoContract.Notes.COL_CREATED + " text, " +
                     MemoContract.Notes.COL_UPDATED + " text)";
     public static final String INIT_TABLE =
@@ -37,8 +37,8 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
                     ") values " +
                     "('メジャーノートへようこそ', " +
                     "180000, " +
-                    "12, " +
-                    "500,  " +
+                    "'12', " +
+                    "'500',  " +
                     "'2017/01/01'" +
                     ")";
     public static final String DROP_TABLE =

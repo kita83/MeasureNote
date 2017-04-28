@@ -5,6 +5,7 @@
 
     <item android:id="@+id/action_settings"
           android:icon="@mipmap/dots_vertical"
+          android:title="@string/action_setting"
           android:orderInCategory="100"
           app:showAsAction="never" >
           <item

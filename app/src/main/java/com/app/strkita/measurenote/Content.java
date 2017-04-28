@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import static android.R.drawable.ic_media_play;
 public class Content extends AppCompatActivity {
 
     private long noteId;
+    private LinearLayout countLayout;
     private EditText bodyText;
     private TextView countText;
     private TextView goalCountText;
@@ -48,6 +51,7 @@ public class Content extends AppCompatActivity {
     private String initFlag = "1";
     private String goalFlag = "0";
     private String pauseFlag = "0";
+    private String mode = MemoContract.Notes.GOAL_MODE;
 
 
     @Override
@@ -108,14 +112,21 @@ public class Content extends AppCompatActivity {
                 c.moveToFirst();
                 // 本文
                 bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
-                // 目標文字数
-                goalCountText.setText("/" + c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) + "文字");
-                // すでに目標に達していた場合、ダイアログ表示済とする
-                if (bodyText.length() >= c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) {
-                    goalFlag = "1";
-                    int green = getResources().getColor(R.color.colorGreen);
-                    goalCountText.setTextColor(green);
-                    countText.setTextColor(green);
+
+                Log.d("goalCount", c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
+                // 目標文字数が設定されている場合のみ、反映
+                if (null == c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT))) {
+                    goalCountText.setText("文字");
+                    mode = MemoContract.Notes.NO_GOAL_MODE;
+                } else {
+                    goalCountText.setText("/" + c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) + "文字");
+                    // すでに目標に達していた場合、目標達成ダイアログ表示済とする
+                    if (bodyText.length() >= c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) {
+                        goalFlag = "1";
+                        int green = getResources().getColor(R.color.colorGreen);
+                        goalCountText.setTextColor(green);
+                        countText.setTextColor(green);
+                    }
                 }
                 // 経過時間
                 elapsedTime = c.getLong(c.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
@@ -161,24 +172,26 @@ public class Content extends AppCompatActivity {
                 // 文字数反映
                 countText.setText(String.valueOf(bodyText.length()));
 
-                String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length()-2);
-                int green = getResources().getColor(R.color.colorGreen);
-                int black = getResources().getColor(R.color.colorGray_333);
+                if (MemoContract.Notes.GOAL_MODE.equals(mode)) {
+                    String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length() - 2);
+                    int green = getResources().getColor(R.color.colorGreen);
+                    int black = getResources().getColor(R.color.colorGray_333);
 
-                // 目標文字数に達した時点でダイアログ表示(初回のみ)
-                if ("0".equals(goalFlag)) {
-                    if (bodyText.length() >= Integer.parseInt(gText)) {
-                        goalFlag = "1";
-                        goalCountText.setTextColor(green);
-                        showGetGoalDialog();
+                    // 目標文字数に達した時点でダイアログ表示(初回のみ)
+                    if ("0".equals(goalFlag)) {
+                        if (bodyText.length() >= Integer.parseInt(gText)) {
+                            goalFlag = "1";
+                            goalCountText.setTextColor(green);
+                            showGetGoalDialog();
+                        }
                     }
-                }
 
-                // 文字色制御
-                if (bodyText.length() >= Integer.parseInt(gText)) {
-                    countText.setTextColor(green);
-                } else {
-                    countText.setTextColor(black);
+                    // 文字色制御
+                    if (bodyText.length() >= Integer.parseInt(gText)) {
+                        countText.setTextColor(green);
+                    } else {
+                        countText.setTextColor(black);
+                    }
                 }
             }
         });
@@ -213,8 +226,6 @@ public class Content extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.N)
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
-        String str = goalCountText.getText().toString().substring(1, goalCountText.length()-2);
-        int gCount = Integer.valueOf(str);
 
         // 一時停止中の場合、計測起点をずらす
         if ("1".equals(pauseFlag)) {
@@ -233,8 +244,13 @@ public class Content extends AppCompatActivity {
         values.put(MemoContract.Notes.COL_BODY, body);
         values.put(MemoContract.Notes.COL_ELAPSED_TIME, saveTime);
         values.put(MemoContract.Notes.COL_CURRENT_COUNT, body.length());
-        values.put(MemoContract.Notes.COL_GOAL_COUNT, gCount);
         values.put(MemoContract.Notes.COL_UPDATED, getNowDate());
+
+        // ゴールありモードの場合
+        if (MemoContract.Notes.GOAL_MODE.equals(mode)) {
+            String gCount = goalCountText.getText().toString().substring(1, goalCountText.length() - 2);
+            values.put(MemoContract.Notes.COL_GOAL_COUNT, gCount);
+        }
 
         if (noteId == 0L) {
             getContentResolver().insert(
@@ -343,7 +359,7 @@ public class Content extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.input_count_dialog, null);
 
         builder.setView(dialogView)
-                .setTitle("目標文字数の設定")
+                .setTitle(R.string.setCount)
                 .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -351,10 +367,11 @@ public class Content extends AppCompatActivity {
                         goalCountText.setText("/" + editText.getText() + "文字");
                     }
                 })
-                .setNegativeButton(R.string.Later, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.not_set, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        goalCountText.setText("文字");
+                        mode = MemoContract.Notes.NO_GOAL_MODE;
                     }
                 });
 
@@ -374,11 +391,11 @@ public class Content extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        timerView.stop();
         // テキストが空の場合、保存しない
         if (bodyText.length() != 0) {
             saveNote();
         }
-        timerView.stop();
         initFlag = "1";
     }
 }

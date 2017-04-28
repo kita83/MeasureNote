@@ -9,6 +9,6 @@
     </declare-styleable>
 
     <declare-styleable name="CustomTheme">
-
+        <attr name="customTextColor" format="color"/>
     </declare-styleable>
 </resources>
