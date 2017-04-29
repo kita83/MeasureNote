@@ -252,6 +252,7 @@ public class Content extends AppCompatActivity {
         }
 
         if (noteId == 0L) {
+            values.put(MemoContract.Notes.COL_CREATED, getNowDate());
             getContentResolver().insert(
                     NoteContentProvider.CONTENT_URI,
                     values
@@ -298,19 +299,18 @@ public class Content extends AppCompatActivity {
                 else if ("0".equals(pauseFlag)) {
                     timerView.stop();
                     pausedTime = SystemClock.elapsedRealtime();
-                    item.setIcon(ic_media_play);
                     pauseFlag = "1";
                     Toast.makeText(this, "一時停止", Toast.LENGTH_SHORT).show();
                 }
-                else if ("1".equals(pauseFlag)) {
-                    awayTime = SystemClock.elapsedRealtime() - pausedTime;
-                    // 計測起点を再セット
-                    timerView.setBase(timerView.getBase() + awayTime);
-                    timerView.start();
-                    item.setIcon(ic_media_pause);
-                    pauseFlag = "0";
-                    Toast.makeText(this, "再開", Toast.LENGTH_SHORT).show();
-                }
+//                else if ("1".equals(pauseFlag)) {
+//                    awayTime = SystemClock.elapsedRealtime() - pausedTime;
+//                    // 計測起点を再セット
+//                    timerView.setBase(timerView.getBase() + awayTime);
+//                    timerView.start();
+//                    item.setIcon(ic_media_pause);
+//                    pauseFlag = "0";
+//                    Toast.makeText(this, "再開", Toast.LENGTH_SHORT).show();
+//                }
                 break;
             // 削除ボタン
             case R.id.action_delete:
