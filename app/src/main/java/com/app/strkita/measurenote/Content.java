@@ -113,7 +113,6 @@ public class Content extends AppCompatActivity {
                 // 本文
                 bodyText.setText(c.getString(c.getColumnIndex(MemoContract.Notes.COL_BODY)));
 
-                Log.d("goalCount", c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)));
                 // 目標文字数が設定されている場合のみ、反映
                 if (null == c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT))) {
                     goalCountText.setText("文字");

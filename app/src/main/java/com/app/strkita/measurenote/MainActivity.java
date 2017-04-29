@@ -1,8 +1,6 @@
 package com.app.strkita.measurenote;
 
-import android.app.Application;
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,7 +13,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int ELAPSED_TIME = 2;
     private static final int CURRENT_COUNT = 3;
     private static final int GOAL_COUNT = 4;
-    private static final int UPDATED = 5;
     public static final int THEME_LIGHT = 0;
     public static final int THEME_DARK = 1;
 
@@ -161,9 +158,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 cc.setText(c.getString(columnIndex));
                 return true;
             case GOAL_COUNT:
+                TextView gc = (TextView) view;
                 if (c.getString(columnIndex) != null) {
-                    TextView gc = (TextView) view;
                     gc.setText(" / " + c.getString(columnIndex) + "文字");
+                } else {
+                    gc.setText(" 文字");
                 }
                 return true;
             default:
