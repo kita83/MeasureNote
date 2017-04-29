@@ -13,7 +13,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,8 +36,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int ELAPSED_TIME = 2;
     private static final int CURRENT_COUNT = 3;
     private static final int GOAL_COUNT = 4;
-    public static final int THEME_LIGHT = 0;
-    public static final int THEME_DARK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,24 +176,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.change_font_size :
-
-                break;
-            case R.id.change_bg_color :
-                if (item.isChecked()) {
-                    setTheme(R.style.AppTheme_Light);
-                    item.setChecked(false);
-                } else {
-//                    TypedValue outValue = new TypedValue();
-//                    getTheme().resolveAttribute(R.attr.colorBackground, outValue, true);
-//                    int resourceId = outValue.resourceId;
-//                    int colorBackGround = getResources().getColor(resourceId);
-//                    item.setChecked(true);
-                }
-                break;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

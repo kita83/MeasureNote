@@ -14,4 +14,6 @@
     <string name="font_size">文字の大きさ</string>
     <string name="background_color">背景色</string>
     <string name="setCount">目標文字数の設定</string>
+    <string name="count">文字</string>
+    <string name="slash"> / </string>
 </resources>

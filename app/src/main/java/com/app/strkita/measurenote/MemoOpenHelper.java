@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * DBアクセス管理
@@ -17,7 +18,7 @@ import java.util.Date;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MemoOpenHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "measurenote.db";
-    public static final int DB_VERSION = 12;
+    public static final int DB_VERSION = 15;
     public static final String CREATE_TABLE =
             "create table notes (" +
                     MemoContract.Notes._ID + " integer primary key autoincrement, " +
@@ -35,11 +36,25 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
                     MemoContract.Notes.COL_GOAL_COUNT + ", " +
                     MemoContract.Notes.COL_CREATED +
                     ") values " +
-                    "('メジャーノートへようこそ', " +
+                    "('メジャーノートへようこそ。\n" +
+                    "シンプルなこのメモアプリには３つの特徴があります。\n" +
+                    "\n" +
+                    "1. 時間計測機能\n" +
+                    "メモを作成してからの経過時間を計測し、記録します。\n" +
+                    "編集を開始すると自動的にタイマーが動き始めます。\n" +
+                    "上部にある一時停止ボタンを押すことで、計測を一時ストップさせることが可能です。\n" +
+                    "\n" +
+                    "2. 文字数カウント機能\n" +
+                    "作成中の文字数をリアルタイムでカウントします。\n" +
+                    "\n" +
+                    "3. 目標文字数設定機能\n" +
+                    "目標文字数を設定し、達成までの時間を測ることで自分の文章作成スピードを知り、ブログなどの記事作成などに役立てることができます。\n" +
+                    "\n" +
+                    "このアプリは少しづつ機能や使い勝手をアップデートしていく予定です。', " +
                     "180000, " +
-                    "'12', " +
-                    "'500',  " +
-                    "'2017/01/01'" +
+                    "'292', " +
+                    "'300',  " +
+                    "'"+ getNowDate() + "'" +
                     ")";
     public static final String DROP_TABLE =
             "drop table if exists " + MemoContract.Notes.TABLE_NAME;
@@ -58,5 +73,14 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DROP_TABLE);
         onCreate(db);
+    }
+
+    /**
+     * 現在日時を取得
+     */
+    public static String getNowDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
+        Date date = new Date(System.currentTimeMillis());
+        return sdf.format(date);
     }
 }

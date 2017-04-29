@@ -16,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Chronometer;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +31,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static android.R.drawable.ic_media_pause;
-import static android.R.drawable.ic_media_play;
-
 public class Content extends AppCompatActivity {
 
     private long noteId;
-    private LinearLayout countLayout;
     private EditText bodyText;
     private TextView countText;
     private TextView goalCountText;
@@ -47,7 +41,6 @@ public class Content extends AppCompatActivity {
     private long elapsedTime = 0L;
     private long pausedTime = 0L;
     private long awayTime = 0L;
-    private long saveTime = 0L;
     private String initFlag = "1";
     private String goalFlag = "0";
     private String pauseFlag = "0";
@@ -120,7 +113,7 @@ public class Content extends AppCompatActivity {
                 } else {
                     goalCountText.setText("/" + c.getString(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) + "文字");
                     // すでに目標に達していた場合、目標達成ダイアログ表示済とする
-                    if (bodyText.length() >= c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT)) {
+                    if (bodyText.length() >= c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT))) {
                         goalFlag = "1";
                         int green = getResources().getColor(R.color.colorGreen);
                         goalCountText.setTextColor(green);
@@ -233,6 +226,7 @@ public class Content extends AppCompatActivity {
         }
 
         // ミリ秒で経過時間を取得
+        long saveTime = 0L;
         if ("0".equals(initFlag)) {
             saveTime = SystemClock.elapsedRealtime() - timerView.getBase();
         } else {
@@ -288,29 +282,12 @@ public class Content extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_pause:
-                // 未カウント状態の場合
-                if ("1".equals(initFlag)) {
-                    timerView.setBase(SystemClock.elapsedRealtime() - elapsedTime);
-                    timerView.start();
-                    item.setIcon(ic_media_pause);
-                    initFlag = "0";
-                    bodyText.setHint("");
-                }
-                else if ("0".equals(pauseFlag)) {
+                if ("0".equals(pauseFlag) && "0".equals(initFlag)) {
                     timerView.stop();
                     pausedTime = SystemClock.elapsedRealtime();
                     pauseFlag = "1";
                     Toast.makeText(this, "一時停止", Toast.LENGTH_SHORT).show();
                 }
-//                else if ("1".equals(pauseFlag)) {
-//                    awayTime = SystemClock.elapsedRealtime() - pausedTime;
-//                    // 計測起点を再セット
-//                    timerView.setBase(timerView.getBase() + awayTime);
-//                    timerView.start();
-//                    item.setIcon(ic_media_pause);
-//                    pauseFlag = "0";
-//                    Toast.makeText(this, "再開", Toast.LENGTH_SHORT).show();
-//                }
                 break;
             // 削除ボタン
             case R.id.action_delete:
@@ -332,6 +309,7 @@ public class Content extends AppCompatActivity {
         Date date = new Date(System.currentTimeMillis());
         return sdf.format(date);
     }
+
     /**
      * 文字数達成時表示用のダイアログを表示
     */

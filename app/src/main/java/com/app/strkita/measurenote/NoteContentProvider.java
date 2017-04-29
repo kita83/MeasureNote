@@ -7,6 +7,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 public class NoteContentProvider extends ContentProvider {
 
@@ -75,6 +77,7 @@ public class NoteContentProvider extends ContentProvider {
         return newUri;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onCreate() {
         memoOpenhelper = new MemoOpenHelper(getContext());
