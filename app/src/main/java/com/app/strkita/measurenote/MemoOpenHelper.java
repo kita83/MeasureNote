@@ -18,7 +18,7 @@ import java.util.Locale;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class MemoOpenHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "measurenote.db";
-    public static final int DB_VERSION = 15;
+    public static final int DB_VERSION = 17;
     public static final String CREATE_TABLE =
             "create table notes (" +
                     MemoContract.Notes._ID + " integer primary key autoincrement, " +
@@ -39,21 +39,39 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
                     "('メジャーノートへようこそ。\n" +
                     "シンプルなこのメモアプリには３つの特徴があります。\n" +
                     "\n" +
-                    "1. 時間計測機能\n" +
+                    "【時間計測機能】\n" +
                     "メモを作成してからの経過時間を計測し、記録します。\n" +
                     "編集を開始すると自動的にタイマーが動き始めます。\n" +
                     "上部にある一時停止ボタンを押すことで、計測を一時ストップさせることが可能です。\n" +
                     "\n" +
-                    "2. 文字数カウント機能\n" +
+                    "【文字数カウント機能】\n" +
                     "作成中の文字数をリアルタイムでカウントします。\n" +
                     "\n" +
-                    "3. 目標文字数設定機能\n" +
+                    "【目標文字数設定機能】\n" +
                     "目標文字数を設定し、達成までの時間を測ることで自分の文章作成スピードを知り、ブログなどの記事作成などに役立てることができます。\n" +
                     "\n" +
-                    "このアプリは少しづつ機能や使い勝手をアップデートしていく予定です。', " +
+                    "このアプリは少しづつ機能や使い勝手をアップデートしていく予定です。\n" +
+                    "\n" +
+                    "MeasureNote is simple notepad with time measurement & character count function.. It also serves as a guide for creating blog posts etc. by measuring time.\n" +
+                    "\n" +
+                    "It is noted by fast startup.\n" +
+                    "A simple and easy-to-use Notepad application \"MeasureNote\" has three features.\n" +
+                    "\n" +
+                    "【Time measurement】\n" +
+                    "Measure and record the elapsed time since creating the memo.\n" +
+                    "It is also possible to pause while editing.\n" +
+                    "\n" +
+                    "【Character count】\n" +
+                    "It counts the number of characters under construction in real time.\n" +
+                    "\n" +
+                    "【Setting a target character number】\n" +
+                    "You can set the target number of characters and measure the time to achieve.\n" +
+                    "Idea-out, blog posts, etc. It is convenient for the writing of sentences.\n" +
+                    "\n" +
+                    "This application is planned to update functions and usability little by little.', " +
                     "180000, " +
-                    "'292', " +
-                    "'300',  " +
+                    "'1035', " +
+                    "'1200',  " +
                     "'"+ getNowDate() + "'" +
                     ")";
     public static final String DROP_TABLE =
