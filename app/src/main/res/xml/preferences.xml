@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/setting_screen">
+        <!-- 色の反転 -->
+        <SwitchPreference
+            android:title="@string/settings_screen_color_reverse"
+            android:key="@string/key_screen_reverse"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/setting_text">
+        <!-- 文字サイズ -->
+        <ListPreference
+            android:title="@string/setting_text_size"
+            android:key="@string/key_text_size"
+            android:entries="@array/text_size_labels"
+            android:entryValues="@array/text_size_values"
+            android:dialogTitle="@string/setting_text_size_dialog_title"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

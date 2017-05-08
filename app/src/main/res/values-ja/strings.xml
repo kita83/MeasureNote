@@ -16,5 +16,15 @@
     <string name="setCount">目標文字数の設定</string>
     <string name="count">文字</string>
     <string name="slash"> / </string>
+    <string name="setting_screen">画面の設定</string>
+    <string name="settings_screen_color_reverse">色の反転</string>
+    <string name="key_screen_reverse">screen.reverse</string>
+    <string name="setting_text">文字の設定</string>
+    <string name="setting_text_size">フォントサイズ</string>
+    <string name="key_text_size">text.size</string>
     <string name="banner_ad_unit_id">ca-app-pub-3926374163661220/2610502155</string>
+    <string name="setting_text_size_dialog_title">フォントサイズの選択</string>
+    <string name="setting_text_size_large">大</string>
+    <string name="setting_text_size_medium">中</string>
+    <string name="setting_text_size_small">小</string>
 </resources>
