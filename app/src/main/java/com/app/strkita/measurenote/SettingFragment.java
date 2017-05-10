@@ -43,9 +43,6 @@ public class SettingFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        setTypefaceSummary(getPreferenceManager().getSharedPreferences());
-        setPrefixSummary(getPreferenceManager().getSharedPreferences());
     }
 
     @Override
@@ -75,28 +72,5 @@ public class SettingFragment extends PreferenceFragment
             // Activityに変更通知
             listener.onSettingChanged();
         }
-
-        // サマリーに反映する
-        if (activity.getString(R.string.key_text_style).equals(key)) {
-            setTypefaceSummary(sharedPreferences);
-        }
-    }
-
-    private void setTypefaceSummary(SharedPreferences sharedPreferences) {
-        String key = getActivity().getString(R.string.key_text_style);
-
-        Preference preference = findPreference(key);
-
-        Set<String> selected = sharedPreferences.getStringSet(key, Collections.<String>emptySet());
-        preference.setSummary(TextUtils.join("/", selected.toArray()));
-    }
-
-    private void setPrefixSummary(SharedPreferences sharedPreferences) {
-        String key = getActivity().getString(R.string.key_file_name_prefix);
-
-        Preference preference = findPreference(key);
-
-        String prefix = sharedPreferences.getString(key, "");
-        preference.setSummary(prefix);
     }
 }

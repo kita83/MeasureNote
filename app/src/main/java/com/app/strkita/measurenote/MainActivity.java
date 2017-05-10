@@ -28,7 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, SimpleCursorAdapter.ViewBinder {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor>, SimpleCursorAdapter.ViewBinder, SettingFragment.SettingFragmentListener {
 
     private AdView mAdView;
     private SimpleCursorAdapter adapter;
@@ -177,7 +178,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_settings:
+                // TODO
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -237,5 +246,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mAdView.destroy();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onSettingChanged() {
+        // TODO
     }
 }

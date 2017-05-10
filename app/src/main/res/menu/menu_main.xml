@@ -3,20 +3,11 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
-    <!--<item android:id="@+id/action_settings"-->
-          <!--android:icon="@mipmap/dots_vertical"-->
-          <!--android:title="@string/action_setting"-->
-          <!--android:orderInCategory="100"-->
-          <!--app:showAsAction="never" >-->
-          <!--<item-->
-              <!--android:id="@+id/change_font_size"-->
-              <!--android:title="@string/font_size"-->
-              <!--android:orderInCategory="0" />-->
-          <!--<item-->
-              <!--android:id="@+id/change_bg_color"-->
-              <!--android:title="@string/background_color"-->
-              <!--android:checkable="true"-->
-              <!--android:orderInCategory="1" />-->
-    <!--</item>-->
+    <item android:id="@+id/action_settings"
+          android:icon="@mipmap/dots_vertical"
+          android:title="@string/action_setting"
+          android:orderInCategory="100"
+          app:showAsAction="always" >
+    </item>
 
 </menu>
