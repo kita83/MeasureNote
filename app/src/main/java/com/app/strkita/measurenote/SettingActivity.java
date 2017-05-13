@@ -3,6 +3,8 @@ package com.app.strkita.measurenote;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 /**
@@ -10,22 +12,23 @@ import android.view.MenuItem;
  * Created by kitada on 2017/05/10.
  */
 
-public class SettingActivity extends Activity implements SettingFragment.SettingFragmentListener {
+public class SettingActivity extends AppCompatActivity implements SettingFragment.SettingFragmentListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.SettingFragment, new SettingFragment())
-                .commit();
-
-        ActionBar actionBar = getActionBar();
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.SettingFragment, new SettingFragment())
+                .addToBackStack(null)
+                .commit();
 
         setResult(RESULT_CANCELED);
     }

@@ -65,7 +65,6 @@ public class SettingFragment extends PreferenceFragment
         // Activityを取得
         Activity activity = getActivity();
 
-        // ActivityがSettingFragmentListenerを実装しているのであれば、通知する
         if (activity instanceof SettingFragmentListener) {
             SettingFragmentListener listener = (SettingFragmentListener)activity;
 

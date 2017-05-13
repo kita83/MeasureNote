@@ -8,7 +8,7 @@
     <string name="hint_start_timer">The timer starts when you start editing</string>
     <string name="no_data">No data available</string>
     <string name="content_activity">content_activity</string>
-    <string name="content_setting">content_setting</string>
+    <string name="content_setting">Settings</string>
     <string name="OK">OK</string>
     <string name="not_set">Not set</string>
     <string name="default_time">00:00:00</string>
