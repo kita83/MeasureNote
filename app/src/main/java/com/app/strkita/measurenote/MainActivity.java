@@ -182,7 +182,8 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.action_settings:
-                // TODO
+                Intent intent = new Intent(this, SettingActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

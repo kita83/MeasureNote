@@ -24,6 +24,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity android:name=".SettingActivity"
+                  android:label="@string/content_setting"/>
 
         <provider
             android:name=".NoteContentProvider"

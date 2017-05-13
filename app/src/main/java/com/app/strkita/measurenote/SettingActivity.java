@@ -17,6 +17,10 @@ public class SettingActivity extends Activity implements SettingFragment.Setting
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        getFragmentManager().beginTransaction()
+                .replace(R.id.SettingFragment, new SettingFragment())
+                .commit();
+
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
