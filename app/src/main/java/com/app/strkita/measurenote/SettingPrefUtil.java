@@ -17,6 +17,7 @@ public class SettingPrefUtil {
     public static final String TEXT_SIZE_LARGE = "large";
     public static final String TEXT_SIZE_MEDIUM = "medium";
     public static final String TEXT_SIZE_SMALL = "small";
+    private static final String KEY_TEXT_STYLE = "text.style";
 
     private static final String KEY_SCREEN_REVERSE = "screen.reverse";
 

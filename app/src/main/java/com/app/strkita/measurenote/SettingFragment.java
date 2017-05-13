@@ -9,6 +9,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,8 @@ public class SettingFragment extends PreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        setTypefaceSummary(getPreferenceManager().getSharedPreferences());
     }
 
     @Override
@@ -71,5 +74,18 @@ public class SettingFragment extends PreferenceFragment
             // Activityに変更通知
             listener.onSettingChanged();
         }
+
+        // サマリーに反映する
+        if (activity.getString(R.string.key_text_size).equals(key)) {
+            setTypefaceSummary(sharedPreferences);
+        }
+    }
+
+    private void setTypefaceSummary(SharedPreferences sharedPreferences) {
+        String key = getActivity().getString(R.string.key_text_size);
+
+        Preference preference = findPreference(key);
+        String selected = sharedPreferences.getString(key, null);
+        preference.setSummary(selected);
     }
 }

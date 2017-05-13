@@ -20,10 +20,10 @@
     <string name="banner_ad_unit_id">ca-app-pub-3926374163661220/2610502155</string>
     <string name="key_screen_reverse">screen.reverse</string>
     <string name="key_text_size">text.size</string>
-    <string name="setting_screen">Setting screen</string>
+    <string name="setting_screen">Setting background color</string>
     <string name="setting_text">Setting text</string>
     <string name="setting_text_size">Setting font size</string>
-    <string name="settings_screen_color_reverse">Reverse color</string>
+    <string name="settings_screen_color_reverse">Night mode</string>
     <string name="setting_text_size_dialog_title">Select font size</string>
     <string name="setting_text_size_large">large</string>
     <string name="setting_text_size_medium">medium</string>
