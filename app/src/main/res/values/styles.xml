@@ -5,19 +5,18 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/colorGray_999</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AppTheme.Light" parent="CustomTheme">
         <item name="android:textColorPrimary">@color/colorGray_666</item>
-        <item name="android:textColorSecondary">@color/colorGray_999</item>
         <item name="android:colorBackground">@color/colorWhite</item>
         <item name="android:windowBackground">@color/colorWhite</item>
     </style>
 
     <style name="AppTheme.Dark" parent="CustomTheme">
         <item name="android:textColorPrimary">@color/colorWhite</item>
-        <item name="android:textColorSecondary">@color/colorGray_999</item>
         <item name="android:colorBackground">@color/colorGray_333</item>
         <item name="android:windowBackground">@color/colorGray_333</item>
     </style>

@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +44,10 @@ public class SettingFragment extends PreferenceFragment
         addPreferencesFromResource(R.xml.preferences);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         setTypefaceSummary(getPreferenceManager().getSharedPreferences());
     }
 
@@ -79,6 +82,10 @@ public class SettingFragment extends PreferenceFragment
         if (activity.getString(R.string.key_text_size).equals(key)) {
             setTypefaceSummary(sharedPreferences);
         }
+        // 背景色を変更
+        if (activity.getString(R.string.key_screen_reverse).equals(key)) {
+            // TODO
+        }
     }
 
     private void setTypefaceSummary(SharedPreferences sharedPreferences) {
@@ -88,4 +95,13 @@ public class SettingFragment extends PreferenceFragment
         String selected = sharedPreferences.getString(key, null);
         preference.setSummary(selected);
     }
+
+    private void getTheme(SharedPreferences sharedPreferences) {
+        String key = getActivity().getString(R.string.key_screen_reverse);
+
+        Preference preference = findPreference(key);
+        String selected = sharedPreferences.getString(key, null);
+        preference.setSummary(selected);
+    }
+
 }
