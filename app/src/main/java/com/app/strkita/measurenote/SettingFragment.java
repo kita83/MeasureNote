@@ -66,8 +66,7 @@ public class SettingFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSharedPreferenceChanged(
-            SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         // Activityを取得
         Activity activity = getActivity();
 
@@ -82,10 +81,6 @@ public class SettingFragment extends PreferenceFragment
         if (activity.getString(R.string.key_text_size).equals(key)) {
             setTypefaceSummary(sharedPreferences);
         }
-        // 背景色を変更
-        if (activity.getString(R.string.key_screen_reverse).equals(key)) {
-            // TODO
-        }
     }
 
     private void setTypefaceSummary(SharedPreferences sharedPreferences) {
@@ -95,13 +90,4 @@ public class SettingFragment extends PreferenceFragment
         String selected = sharedPreferences.getString(key, null);
         preference.setSummary(selected);
     }
-
-    private void getTheme(SharedPreferences sharedPreferences) {
-        String key = getActivity().getString(R.string.key_screen_reverse);
-
-        Preference preference = findPreference(key);
-        String selected = sharedPreferences.getString(key, null);
-        preference.setSummary(selected);
-    }
-
 }

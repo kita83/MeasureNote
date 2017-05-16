@@ -1,6 +1,7 @@
 package com.app.strkita.measurenote;
 
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -112,7 +114,33 @@ public class MainActivity extends AppCompatActivity
             }
         });
         getSupportLoaderManager().initLoader(0, null, this);
+
+        reflectSettings();
     }
+
+
+    // 設定を反映する
+    public void reflectSettings() {
+        Context context = getApplicationContext();
+        if (context != null) {
+            setFontSize(SettingPrefUtil.getFontSize(context));
+            switchTheme(SettingPrefUtil.isScreenReverse(context));
+        }
+    }
+
+    // 文字サイズの設定を反映する
+    private void setFontSize(float fontSizePx) {
+        TextView textView = (TextView) findViewById(R.id.bodyText);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSizePx);
+    }
+
+    // 色の反転の設定を反映する
+    private void switchTheme(boolean reverse) {
+        if (reverse) {
+
+        }
+    }
+
 
     /**
      * 削除用ダイアログ

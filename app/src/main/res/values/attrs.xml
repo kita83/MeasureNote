@@ -10,5 +10,6 @@
 
     <declare-styleable name="CustomTheme">
         <attr name="customTextColor" format="color"/>
+        <attr name="customTheme" format="integer|reference"/>
     </declare-styleable>
 </resources>

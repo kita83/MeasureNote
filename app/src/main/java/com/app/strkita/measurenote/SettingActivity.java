@@ -1,10 +1,7 @@
 package com.app.strkita.measurenote;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 
 /**
@@ -25,10 +22,10 @@ public class SettingActivity extends AppCompatActivity implements SettingFragmen
             actionBar.setHomeButtonEnabled(true);
         }
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.SettingFragment, new SettingFragment())
-                .addToBackStack(null)
-                .commit();
+//        getFragmentManager().beginTransaction()
+//                .replace(R.id.SettingFragment, new SettingFragment())
+//                .addToBackStack(null)
+//                .commit();
 
         setResult(RESULT_CANCELED);
     }
