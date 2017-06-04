@@ -28,4 +28,8 @@
     <string name="setting_text_size_medium">中</string>
     <string name="setting_text_size_small">小</string>
     <string name="content_setting">設定</string>
+    <string name="text_size_values">text_size_values</string>
+    <string name="setting_text_size_value_large">large</string>
+    <string name="setting_text_size_value_medium">medium</string>
+    <string name="setting_text_size_value_small">small</string>
 </resources>

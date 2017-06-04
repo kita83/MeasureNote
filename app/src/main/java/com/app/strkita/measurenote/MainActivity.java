@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity
         adapter.setViewBinder(this);
         final ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
+        RingView ringView = (RingView) findViewById(R.id.view_ring);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity
 
 
     // 設定を反映する
-    public void reflectSettings() {
+    private void reflectSettings() {
         Context context = getApplicationContext();
         if (context != null) {
             setFontSize(SettingPrefUtil.getFontSize(context));
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 削除用ダイアログ
      */
-    public void showDeleteDialog(long id) {
+    private void showDeleteDialog(long id) {
         final long _id = id;
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("このノートを削除しますか？")
@@ -281,4 +282,5 @@ public class MainActivity extends AppCompatActivity
     public void onSettingChanged() {
         // TODO
     }
+
 }

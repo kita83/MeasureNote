@@ -15,11 +15,10 @@ import java.util.Locale;
  * Created by kitada on 2017/02/09.
  */
 
-@RequiresApi(api = Build.VERSION_CODES.N)
 public class MemoOpenHelper extends SQLiteOpenHelper {
-    public static final String DB_NAME = "measurenote.db";
-    public static final int DB_VERSION = 17;
-    public static final String CREATE_TABLE =
+    private static final String DB_NAME = "measurenote.db";
+    private static final int DB_VERSION = 17;
+    private static final String CREATE_TABLE =
             "create table notes (" +
                     MemoContract.Notes._ID + " integer primary key autoincrement, " +
                     MemoContract.Notes.COL_BODY + " text, " +
@@ -28,7 +27,7 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
                     MemoContract.Notes.COL_GOAL_COUNT + " text, " +
                     MemoContract.Notes.COL_CREATED + " text, " +
                     MemoContract.Notes.COL_UPDATED + " text)";
-    public static final String INIT_TABLE =
+    private static final String INIT_TABLE =
             "insert into notes (" +
                     MemoContract.Notes.COL_BODY + ", " +
                     MemoContract.Notes.COL_ELAPSED_TIME + ", " +
@@ -74,7 +73,7 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
                     "'1200',  " +
                     "'"+ getNowDate() + "'" +
                     ")";
-    public static final String DROP_TABLE =
+    private static final String DROP_TABLE =
             "drop table if exists " + MemoContract.Notes.TABLE_NAME;
 
     public MemoOpenHelper(Context c) {
@@ -96,7 +95,7 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
     /**
      * 現在日時を取得
      */
-    public static String getNowDate(){
+    private static String getNowDate(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
         Date date = new Date(System.currentTimeMillis());
         return sdf.format(date);

@@ -6,8 +6,8 @@
         <item>@string/setting_text_size_small</item>
     </string-array>
     <string-array name="text_size_values">
-        <item>large</item>
-        <item>medium</item>
-        <item>small</item>
+        <item>@string/setting_text_size_value_large</item>
+        <item>@string/setting_text_size_value_medium</item>
+        <item>@string/setting_text_size_value_small</item>
     </string-array>
 </resources>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:paddingTop="16dp"
               android:paddingLeft="16dp"
               android:paddingRight="16dp"
               android:paddingBottom="4dp"
-              android:background="?android:windowBackground"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
@@ -13,6 +13,19 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.app.strkita.measurenote.RingView
+            android:id="@+id/view_ring"
+            app:draw_angle="300"
+            app:primary_line_color="#ff00ddff"
+            app:secondary_line_color="#f0f0f0"
+            app:start_angle="-90"
+            app:stroke_width="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="5dp"
+            android:layout_gravity="top"
+            android:layout_width="24dp"
+            android:layout_height="24dp"/>
 
         <TextView
             android:id="@+id/bodyText"

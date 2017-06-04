@@ -28,5 +28,7 @@
     <string name="setting_text_size_large">large</string>
     <string name="setting_text_size_medium">medium</string>
     <string name="setting_text_size_small">small</string>
-
+    <string name="setting_text_size_value_large">large</string>
+    <string name="setting_text_size_value_medium">medium</string>
+    <string name="setting_text_size_value_small">small</string>
 </resources>

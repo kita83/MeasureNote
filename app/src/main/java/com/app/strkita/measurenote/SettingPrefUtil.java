@@ -2,7 +2,6 @@ package com.app.strkita.measurenote;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.Preference;
 
 /**
  * SharedPreferences設定用ユーティリティクラス

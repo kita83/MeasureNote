@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Chronometer;
 import android.widget.EditText;
@@ -45,7 +47,7 @@ public class Content extends AppCompatActivity {
     private String goalFlag = "0";
     private String pauseFlag = "0";
     private String mode = MemoContract.Notes.GOAL_MODE;
-
+    private final ViewGroup nullParent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +117,7 @@ public class Content extends AppCompatActivity {
                     // すでに目標に達していた場合、目標達成ダイアログ表示済とする
                     if (bodyText.length() >= c.getInt(c.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT))) {
                         goalFlag = "1";
-                        int green = getResources().getColor(R.color.colorGreen);
+                        int green = ContextCompat.getColor(this, R.color.colorGreen);
                         goalCountText.setTextColor(green);
                         countText.setTextColor(green);
                     }
@@ -166,8 +168,8 @@ public class Content extends AppCompatActivity {
 
                 if (MemoContract.Notes.GOAL_MODE.equals(mode)) {
                     String gText = goalCountText.getText().toString().substring(1, goalCountText.getText().toString().length() - 2);
-                    int green = getResources().getColor(R.color.colorGreen);
-                    int black = getResources().getColor(R.color.colorGray_333);
+                    int green = ContextCompat.getColor(getApplicationContext(), R.color.colorGreen);
+                    int black = ContextCompat.getColor(getApplicationContext(), R.color.colorGray_333);
 
                     // 目標文字数に達した時点でダイアログ表示(初回のみ)
                     if ("0".equals(goalFlag)) {
@@ -215,7 +217,6 @@ public class Content extends AppCompatActivity {
     /**
      * 編集データを保存
      */
-    @TargetApi(Build.VERSION_CODES.N)
     private void saveNote() {
         String body = bodyText.getText().toString().trim();
 
@@ -268,11 +269,6 @@ public class Content extends AppCompatActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_form, menu);
         return true;
@@ -304,7 +300,7 @@ public class Content extends AppCompatActivity {
     /**
      * 現在日時を取得
      */
-    public static String getNowDate(){
+    private static String getNowDate(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.US);
         Date date = new Date(System.currentTimeMillis());
         return sdf.format(date);
@@ -313,7 +309,7 @@ public class Content extends AppCompatActivity {
     /**
      * 文字数達成時表示用のダイアログを表示
     */
-    public void showGetGoalDialog() {
+    private void showGetGoalDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("ゴール！")
                 .setMessage("目標文字数に到達しました。")
@@ -329,11 +325,11 @@ public class Content extends AppCompatActivity {
      /**
      * 文字数設定用のダイアログを表示
      */
-    public void showCountSetDialog() {
+     private void showCountSetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         // レイアウトファイルからビューを取得
-        final View dialogView = inflater.inflate(R.layout.input_count_dialog, null);
+        final View dialogView = inflater.inflate(R.layout.input_count_dialog, nullParent, false);
 
         builder.setView(dialogView)
                 .setTitle(R.string.setCount)
