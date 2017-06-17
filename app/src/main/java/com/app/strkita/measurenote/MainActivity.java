@@ -14,6 +14,8 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +37,9 @@ public class MainActivity extends AppCompatActivity
 
     private AdView mAdView;
     private SimpleCursorAdapter adapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     public final static String EXTRA_ID = "com.app.strkita.measurenote.ID";
     private static final int BODY = 1;
     private static final int ELAPSED_TIME = 2;
@@ -61,6 +66,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         String[] from = {
                 MemoContract.Notes.COL_BODY,
                 MemoContract.Notes.COL_ELAPSED_TIME,
@@ -70,10 +79,13 @@ public class MainActivity extends AppCompatActivity
 
         int[] to = {
                 R.id.bodyText,
-                R.id.elapsed_time,
-                R.id.current_count,
-                R.id.goal_count,
+                R.id.elapsedTime,
+                R.id.currentCount,
+                R.id.goalCount,
         };
+
+        mAdapter = new RecyclerAdapter(from);
+        mRecyclerView.setAdapter(mAdapter);
 
         adapter = new SimpleCursorAdapter(
                 this,
@@ -87,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         adapter.setViewBinder(this);
         final ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
-        RingView ringView = (RingView) findViewById(R.id.view_ring);
+//        RingView ringView = (RingView) findViewById(R.id.view_ring);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
