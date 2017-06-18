@@ -28,8 +28,7 @@ public class NoteContentProvider extends ContentProvider {
 
     MemoOpenHelper memoOpenhelper;
 
-    public NoteContentProvider() {
-    }
+    public NoteContentProvider() {}
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
