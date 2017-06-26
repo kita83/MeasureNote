@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity
         reflectSettings();
     }
 
-
     // 設定を反映する
     private void reflectSettings() {
         Context context = getApplicationContext();
@@ -255,11 +254,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        adapter.swapCursor(data);
-
-    }
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) { adapter.swapCursor(data); }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {

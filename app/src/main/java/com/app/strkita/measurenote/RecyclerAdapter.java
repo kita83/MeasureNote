@@ -16,7 +16,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private String[] dataset;
     private OnItemClickListener mListener;
 
-    public interface OnItemClickListener {
+    public static interface OnItemClickListener {
         void onItemClick(View v, int position);
     }
     public interface onItemLongClickListener {}
@@ -40,6 +40,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
         holder.bodyText.setText("hoge");
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
     }
 
@@ -49,6 +55,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        View mView;
         TextView bodyText;
         TextView currentCount;
         TextView goalCount;
@@ -56,6 +63,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
+            mView = itemView;
             this.bodyText = (TextView) itemView.findViewById(R.id.bodyText);
             this.currentCount = (TextView) itemView.findViewById(R.id.currentCount);
             this.goalCount = (TextView) itemView.findViewById(R.id.goalCount);
