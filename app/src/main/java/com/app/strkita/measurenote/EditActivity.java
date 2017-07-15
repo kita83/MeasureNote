@@ -1,6 +1,5 @@
 package com.app.strkita.measurenote;
 
-import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NavUtils;
@@ -33,9 +31,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class Content extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity {
 
-    private long noteId;
+    private long listId;
     private EditText bodyText;
     private TextView countText;
     private TextView goalCountText;
@@ -65,10 +63,10 @@ public class Content extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        noteId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
+        listId = intent.getLongExtra(MainActivity.EXTRA_ID, 0L);
 
         // 新規作成
-        if (noteId == 0) {
+        if (listId == 0) {
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setTitle("New Note");
             }
@@ -85,9 +83,10 @@ public class Content extends AppCompatActivity {
 
             Uri uri = ContentUris.withAppendedId(
                     NoteContentProvider.CONTENT_URI,
-                    noteId
+                    listId
             );
 
+            // 取得するカラムを指定
             String[] projection = {
                     MemoContract.Notes.COL_BODY,
                     MemoContract.Notes.COL_ELAPSED_TIME,
@@ -98,7 +97,7 @@ public class Content extends AppCompatActivity {
                     uri,
                     projection,
                     MemoContract.Notes._ID + " = ?",
-                    new String[] { Long.toString(noteId) },
+                    new String[] { Long.toString(listId) },
                     null
             );
 
@@ -201,12 +200,12 @@ public class Content extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Uri uri = ContentUris.withAppendedId(
                                 NoteContentProvider.CONTENT_URI,
-                                noteId
+                                listId
                         );
                         getContentResolver().delete(
                                 uri,
                                 MemoContract.Notes._ID + " = ?",
-                                new String[] { Long.toString(noteId) }
+                                new String[] { Long.toString(listId) }
                         );
                         finish();
                     }
@@ -246,7 +245,7 @@ public class Content extends AppCompatActivity {
             values.put(MemoContract.Notes.COL_GOAL_COUNT, gCount);
         }
 
-        if (noteId == 0L) {
+        if (listId == 0L) {
             values.put(MemoContract.Notes.COL_CREATED, getNowDate());
             getContentResolver().insert(
                     NoteContentProvider.CONTENT_URI,
@@ -255,14 +254,14 @@ public class Content extends AppCompatActivity {
         } else {
             Uri uri = ContentUris.withAppendedId(
                     NoteContentProvider.CONTENT_URI,
-                    noteId
+                    listId
             );
 
             getContentResolver().update(
                     uri,
                     values,
                     MemoContract.Notes._ID + " = ?",
-                    new String[] { Long.toString(noteId) }
+                    new String[] { Long.toString(listId) }
             );
         }
         finish();

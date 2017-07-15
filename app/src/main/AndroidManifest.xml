@@ -2,8 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.app.strkita.measurenote">
 
+    <!-- 外部ストレージ読み書きのためのパーミッション -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <!-- NoteContentProviderの読み込み権限を宣言する -->
+    <permission android:name="@string/permission_note_read"
+                android:protectionLevel="normal"
+                android:label="@string/permission_note_read_label"
+                android:description="@string/permission_note_read_description"/>
+
+    <!-- NoteContentProviderの書き込み権限を宣言する -->
+    <permission android:name="@string/permission_note_write"
+                android:protectionLevel="signature"
+                android:label="@string/permission_note_write_label"
+                android:description="@string/permission_note_write_description"/>
+
+    <!-- 作成したパーミッションの使用を宣言する -->
+    <uses-permission android:name="@string/permission_note_read"/>
+    <uses-permission android:name="@string/permission_note_write"/>
 
     <application
         android:allowBackup="false"
@@ -17,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Content"
+        <activity android:name=".EditActivity"
                   android:label="@string/content_activity"
                   android:parentActivityName=".MainActivity">
             <meta-data
@@ -27,11 +44,14 @@
         <activity android:name=".SettingActivity"
                   android:label="@string/content_setting"/>
 
+        <!-- ノート管理用のProvider -->
         <provider
             android:name=".NoteContentProvider"
             android:authorities="com.app.strkita.measurenote.NoteContentProvider"
+            android:readPermission="@string/permission_note_read"
+            android:writePermission="@string/permission_note_write"
             android:enabled="true"
-            android:exported="false">
+            android:exported="true">
         </provider>
     </application>
 

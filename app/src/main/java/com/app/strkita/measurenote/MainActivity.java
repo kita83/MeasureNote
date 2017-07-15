@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +19,6 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -32,14 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static android.R.attr.id;
+
 public class MainActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor>, SimpleCursorAdapter.ViewBinder, SettingFragment.SettingFragmentListener {
+        implements LoaderManager.LoaderCallbacks<Cursor>, SettingFragment.SettingFragmentListener {
 
     private AdView mAdView;
-    private SimpleCursorAdapter adapter;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerAdapter mAdapter;
     public final static String EXTRA_ID = "com.app.strkita.measurenote.ID";
     private static final int BODY = 1;
     private static final int ELAPSED_TIME = 2;
@@ -61,14 +58,13 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Content.class);
+                Intent intent = new Intent(getApplicationContext(), EditActivity.class);
                 startActivity(intent);
             }
         });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         String[] from = {
                 MemoContract.Notes.COL_BODY,
@@ -77,55 +73,63 @@ public class MainActivity extends AppCompatActivity
                 MemoContract.Notes.COL_GOAL_COUNT,
         };
 
-        int[] to = {
-                R.id.bodyText,
-                R.id.elapsedTime,
-                R.id.currentCount,
-                R.id.goalCount,
-        };
+//        int[] to = {
+//                R.id.bodyText,
+//                R.id.elapsedTime,
+//                R.id.currentCount,
+//                R.id.goalCount,
+//        };
 
         mAdapter = new RecyclerAdapter(from);
         mRecyclerView.setAdapter(mAdapter);
-
-        adapter = new SimpleCursorAdapter(
-                this,
-                R.layout.notelist,
-                null,
-                from,
-                to,
-                0
-        );
-
-        adapter.setViewBinder(this);
-        final ListView listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(adapter);
-//        RingView ringView = (RingView) findViewById(R.id.view_ring);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAdapter.setOnItemClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(
-                    AdapterView<?> parent,
-                    View view,
-                    int position,
-                    long id
-            ) {
-                Intent intent = new Intent(MainActivity.this, Content.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra(EXTRA_ID, id);
                 startActivity(intent);
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(
-                    AdapterView<?> parent,
-                    View view,
-                    int position,
-                    long id) {
-                showDeleteDialog(id);
-                return true;
-            }
-        });
+//        adapter = new SimpleCursorAdapter(
+//                this,
+//                R.layout.notelist,
+//                null,
+//                from,
+//                to,
+//                0
+//        );
+
+//        adapter.setViewBinder(this);
+//        final ListView listView = (ListView) findViewById(R.id.listView);
+//        listView.setAdapter(adapter);
+//        RingView ringView = (RingView) findViewById(R.id.view_ring);
+
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(
+//                    AdapterView<?> parent,
+//                    View view,
+//                    int position,
+//                    long id
+//            ) {
+//                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+//                intent.putExtra(EXTRA_ID, id);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(
+//                    AdapterView<?> parent,
+//                    View view,
+//                    int position,
+//                    long id) {
+//                showDeleteDialog(id);
+//                return true;
+//            }
+//        });
         getSupportLoaderManager().initLoader(0, null, this);
 
         reflectSettings();
@@ -254,11 +258,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) { adapter.swapCursor(data); }
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+//        mAdapter.swapCursor(data);
+        // アダプターをセットする
+        mAdapter = new RecyclerAdapter(data);
+    }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+        mAdapter.clear();
     }
 
     @Override

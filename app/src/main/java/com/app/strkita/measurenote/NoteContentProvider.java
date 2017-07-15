@@ -30,55 +30,16 @@ public class NoteContentProvider extends ContentProvider {
 
     public NoteContentProvider() {}
 
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        if (uriMatcher.match(uri) != NOTE_ITEM) {
-            throw new IllegalArgumentException("Invalid URI: " + uri);
-        }
-
-        SQLiteDatabase db = memoOpenhelper.getWritableDatabase();
-        int deletedCount = db.delete(
-                MemoContract.Notes.TABLE_NAME,
-                selection,
-                selectionArgs
-        );
-
-        getContext().getContentResolver().notifyChange(uri, null);
-        return deletedCount;
-    }
-
-    @Override
-    public String getType(Uri uri) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public Uri insert(Uri uri, ContentValues values) {
-        if (uriMatcher.match(uri) != NOTES) {
-            throw new IllegalArgumentException("Invalid URI: " + uri);
-        }
-
-        SQLiteDatabase db = memoOpenhelper.getWritableDatabase();
-        long newId = db.insert(
-                MemoContract.Notes.TABLE_NAME,
-                null,
-                values
-        );
-
-        Uri newUri = ContentUris.withAppendedId(
-                NoteContentProvider.CONTENT_URI,
-                newId
-        );
-
-        getContext().getContentResolver().notifyChange(newUri, null);
-        return newUri;
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onCreate() {
         memoOpenhelper = new MemoOpenHelper(getContext());
         return true;
+    }
+
+    @Override
+    public String getType(Uri uri) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
@@ -106,8 +67,32 @@ public class NoteContentProvider extends ContentProvider {
                 null,
                 sortOrder
         );
+
+        // 指定したURIへの通知イベントを受信する設定
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
+    }
+
+    @Override
+    public Uri insert(Uri uri, ContentValues values) {
+        if (uriMatcher.match(uri) != NOTES) {
+            throw new IllegalArgumentException("Invalid URI: " + uri);
+        }
+
+        SQLiteDatabase db = memoOpenhelper.getWritableDatabase();
+        long newId = db.insert(
+                MemoContract.Notes.TABLE_NAME,
+                null,
+                values
+        );
+
+        Uri newUri = ContentUris.withAppendedId(
+                NoteContentProvider.CONTENT_URI,
+                newId
+        );
+
+        getContext().getContentResolver().notifyChange(newUri, null);
+        return newUri;
     }
 
     @Override
@@ -128,5 +113,22 @@ public class NoteContentProvider extends ContentProvider {
 
         getContext().getContentResolver().notifyChange(uri, null);
         return updatedCount;
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        if (uriMatcher.match(uri) != NOTE_ITEM) {
+            throw new IllegalArgumentException("Invalid URI: " + uri);
+        }
+
+        SQLiteDatabase db = memoOpenhelper.getWritableDatabase();
+        int deletedCount = db.delete(
+                MemoContract.Notes.TABLE_NAME,
+                selection,
+                selectionArgs
+        );
+
+        getContext().getContentResolver().notifyChange(uri, null);
+        return deletedCount;
     }
 }
