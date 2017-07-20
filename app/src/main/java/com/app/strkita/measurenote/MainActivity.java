@@ -190,36 +190,36 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
-    public boolean setViewValue(View view, Cursor c, int columnIndex) {
-        switch (columnIndex) {
-            case BODY:
-                TextView bd = (TextView) view;
-                bd.setText(c.getString(columnIndex));
-                return true;
-            case ELAPSED_TIME:
-                TextView et = (TextView) view;
-                long t = c.getLong(columnIndex);
-                SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.US);
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-                et.setText(sdf.format(t));
-                return true;
-            case CURRENT_COUNT:
-                TextView cc = (TextView) view;
-                cc.setText(c.getString(columnIndex));
-                return true;
-            case GOAL_COUNT:
-                TextView gc = (TextView) view;
-                if (c.getString(columnIndex) != null) {
-                    gc.setText(" / " + c.getString(columnIndex) + "文字");
-                } else {
-                    gc.setText(" 文字");
-                }
-                return true;
-            default:
-                break;
-        }
-        return false;
-    }
+//    public boolean setViewValue(View view, Cursor c, int columnIndex) {
+//        switch (columnIndex) {
+//            case BODY:
+//                TextView bd = (TextView) view;
+//                bd.setText(c.getString(columnIndex));
+//                return true;
+//            case ELAPSED_TIME:
+//                TextView et = (TextView) view;
+//                long t = c.getLong(columnIndex);
+//                SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.US);
+//                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+//                et.setText(sdf.format(t));
+//                return true;
+//            case CURRENT_COUNT:
+//                TextView cc = (TextView) view;
+//                cc.setText(c.getString(columnIndex));
+//                return true;
+//            case GOAL_COUNT:
+//                TextView gc = (TextView) view;
+//                if (c.getString(columnIndex) != null) {
+//                    gc.setText(" / " + c.getString(columnIndex) + "文字");
+//                } else {
+//                    gc.setText(" 文字");
+//                }
+//                return true;
+//            default:
+//                break;
+//        }
+//        return false;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

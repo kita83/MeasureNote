@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
+
 /**
  * 一覧リスト用Adapter
  * Created by strkita on 2017/06/17.
@@ -46,7 +50,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.ViewHolder holder, int position) {
-        holder.bodyText.setText("hoge");
+        dataCursor.moveToPosition(position);
+
+        String body = dataCursor.getString(dataCursor.getColumnIndex(MemoContract.Notes.COL_BODY));
+        long eTime = dataCursor.getLong(dataCursor.getColumnIndex(MemoContract.Notes.COL_ELAPSED_TIME));
+        SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.US);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        String cCount = dataCursor.getString(dataCursor.getColumnIndex(MemoContract.Notes.COL_CURRENT_COUNT));
+        String gCount = dataCursor.getString(dataCursor.getColumnIndex(MemoContract.Notes.COL_GOAL_COUNT));
+
+        holder.bodyText.setText(body);
+        holder.elapsedTime.setText(sdf.format(eTime));
+        holder.currentCount.setText(cCount);
+        if (gCount != null) {
+            holder.goalCount.setText(" / " + gCount + "文字");
+        } else {
+            holder.goalCount.setText(" 文字");
+        }
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +79,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return dataset.length;
+        return (dataCursor == null) ? 0 : dataCursor.getCount();
     }
 
 
