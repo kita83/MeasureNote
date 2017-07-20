@@ -1,15 +1,11 @@
 package com.app.strkita.measurenote;
 
-import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-
-import static android.R.attr.id;
-import static com.app.strkita.measurenote.MainActivity.EXTRA_ID;
 
 /**
  * 一覧リスト用Adapter
@@ -19,6 +15,7 @@ import static com.app.strkita.measurenote.MainActivity.EXTRA_ID;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     private String[] dataset;
     private View.OnClickListener mListener;
+    private Cursor dataCursor;
 
     public RecyclerAdapter(String[] dataset) {
         this.dataset = dataset;
@@ -26,6 +23,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     public void setOnItemClickListener(View.OnClickListener listener) {
         mListener = listener;
+    }
+
+    public Cursor swapCursor(Cursor c) {
+        if (dataCursor == c) {
+            return null;
+        }
+        Cursor oldCursor = dataCursor;
+        this.dataCursor = c;
+        if (c != null) {
+            this.notifyDataSetChanged();
+        }
+        return oldCursor;
     }
 
     @Override
@@ -51,6 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public int getItemCount() {
         return dataset.length;
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         View mView;

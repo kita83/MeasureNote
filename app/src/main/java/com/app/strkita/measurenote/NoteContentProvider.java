@@ -3,6 +3,7 @@ package com.app.strkita.measurenote;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -69,7 +70,10 @@ public class NoteContentProvider extends ContentProvider {
         );
 
         // 指定したURIへの通知イベントを受信する設定
-        c.setNotificationUri(getContext().getContentResolver(), uri);
+        Context context = getContext();
+        if (context != null) {
+            c.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return c;
     }
 
@@ -91,7 +95,10 @@ public class NoteContentProvider extends ContentProvider {
                 newId
         );
 
-        getContext().getContentResolver().notifyChange(newUri, null);
+        Context context = getContext();
+        if (context != null) {
+            getContext().getContentResolver().notifyChange(newUri, null);
+        }
         return newUri;
     }
 
@@ -111,7 +118,10 @@ public class NoteContentProvider extends ContentProvider {
                 selectionArgs
         );
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        Context context = getContext();
+        if (context != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return updatedCount;
     }
 
@@ -128,7 +138,10 @@ public class NoteContentProvider extends ContentProvider {
                 selectionArgs
         );
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        Context context = getContext();
+        if (context != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return deletedCount;
     }
 }

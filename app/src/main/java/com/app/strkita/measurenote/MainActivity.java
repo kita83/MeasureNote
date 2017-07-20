@@ -1,10 +1,12 @@
 package com.app.strkita.measurenote;
 
+import android.content.AsyncTaskLoader;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +28,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -130,6 +134,9 @@ public class MainActivity extends AppCompatActivity
 //                return true;
 //            }
 //        });
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(llm);
         getSupportLoaderManager().initLoader(0, null, this);
 
         reflectSettings();
@@ -234,6 +241,80 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    // DBを検索するLoaderのコールバック
+//    private android.app.LoaderManager.LoaderCallbacks<List<String>> mDBLoader
+//            = new android.app.LoaderManager.LoaderCallbacks<List<String>>() {
+//
+//        @Override
+//        public android.content.Loader<List<String>> onCreateLoader(int id, Bundle args) {
+//            // Loaderの生成
+//            DatabaseLoader loader = new DatabaseLoader(getActivity(), args.getString(ARGS_DATE));
+//            loader.forceLoad();
+//            return loader;
+//        }
+//
+//        @Override
+//        public void onLoadFinished(android.content.Loader<List<String>> loader, List<String> data) {
+//            // アダプターをセットする
+//            mAdapter = new GalleryAdapter(getActivity(), data);
+//            mRecyclerView.setAdapter(mAdapter);
+//        }
+//
+//        @Override
+//        public void onLoaderReset(android.content.Loader<List<String>> loader) {
+//            mAdapter.clear();
+//        }
+//    };
+//
+//    private static class DatabaseLoader extends AsyncTaskLoader<List<String>> {
+//        String dataStr;
+//
+//        public DatabaseLoader(Context context, String dataStr) {
+//            super(context);
+//            this.dataStr = dataStr;
+//        }
+//
+//        @Override
+//        public List<String> loadInBackground() {
+//            MemoOpenHelper helper = new MemoOpenHelper(getContext());
+//            SQLiteDatabase database = helper.getReadableDatabase();
+//
+//            List<String> filePaths = new ArrayList<>();
+//
+//            String[] projection = {
+//                MemoContract.Notes._ID,
+//                MemoContract.Notes.COL_BODY,
+//                MemoContract.Notes.COL_ELAPSED_TIME,
+//                MemoContract.Notes.COL_CURRENT_COUNT,
+//                MemoContract.Notes.COL_GOAL_COUNT,
+//                MemoContract.Notes.COL_CREATED,
+//                MemoContract.Notes.COL_UPDATED
+//            };
+//
+//            // リストの全件を検索する
+//            Cursor cursor = database.query(
+//                    MemoContract.Notes.TABLE_NAME,
+//                    projection,
+//                    null,
+//                    null,
+//                    null,
+//                    null,
+//                    MemoContract.Notes.COL_UPDATED + " DESC");
+//
+//            if (cursor == null) return filePaths;
+//
+//            // Cursorからファイルパスをリストに詰める
+//            while (cursor.moveToNext()) {
+//                String path = cursor.getString(cursor.getColumnIndex(PictureDBHelper.COLUMN_FILE_PATH));
+//                filePaths.add(path);
+//            }
+//
+//            cursor.close();
+//            database.close();
+//
+//            return filePaths;
+//        }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -259,14 +340,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        mAdapter.swapCursor(data);
-        // アダプターをセットする
-        mAdapter = new RecyclerAdapter(data);
+        mAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        mAdapter.clear();
+        mAdapter.swapCursor(null);
     }
 
     @Override
