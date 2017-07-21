@@ -27,7 +27,12 @@
         </activity>
         <activity android:name=".SettingActivity"
                   android:label="@string/content_setting"/>
-
+        <provider
+            android:name=".NoteContentProvider"
+            android:authorities="com.app.strkita.measurenote.NoteContentProvider"
+            android:enabled="true"
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>
