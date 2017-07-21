@@ -15,6 +15,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
@@ -79,15 +80,14 @@ public class MainActivity extends AppCompatActivity
                 MemoContract.Notes.COL_GOAL_COUNT,
         };
 
-//        int[] to = {
-//                R.id.bodyText,
-//                R.id.elapsedTime,
-//                R.id.currentCount,
-//                R.id.goalCount,
-//        };
-
         mAdapter = new RecyclerAdapter(from);
         mRecyclerView.setAdapter(mAdapter);
+
+        // 区切り線の設定
+        RecyclerView.ItemDecoration divider = new DividerItemDecoration(
+                mRecyclerView.getContext(), llm.getOrientation());
+        mRecyclerView.addItemDecoration(divider);
+
         mAdapter.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,15 +96,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
-//        adapter = new SimpleCursorAdapter(
-//                this,
-//                R.layout.notelist,
-//                null,
-//                from,
-//                to,
-//                0
-//        );
 
 //        adapter.setViewBinder(this);
 //        final ListView listView = (ListView) findViewById(R.id.listView);
@@ -190,37 +181,6 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
-//    public boolean setViewValue(View view, Cursor c, int columnIndex) {
-//        switch (columnIndex) {
-//            case BODY:
-//                TextView bd = (TextView) view;
-//                bd.setText(c.getString(columnIndex));
-//                return true;
-//            case ELAPSED_TIME:
-//                TextView et = (TextView) view;
-//                long t = c.getLong(columnIndex);
-//                SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.US);
-//                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-//                et.setText(sdf.format(t));
-//                return true;
-//            case CURRENT_COUNT:
-//                TextView cc = (TextView) view;
-//                cc.setText(c.getString(columnIndex));
-//                return true;
-//            case GOAL_COUNT:
-//                TextView gc = (TextView) view;
-//                if (c.getString(columnIndex) != null) {
-//                    gc.setText(" / " + c.getString(columnIndex) + "文字");
-//                } else {
-//                    gc.setText(" 文字");
-//                }
-//                return true;
-//            default:
-//                break;
-//        }
-//        return false;
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -240,80 +200,6 @@ public class MainActivity extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    // DBを検索するLoaderのコールバック
-//    private android.app.LoaderManager.LoaderCallbacks<List<String>> mDBLoader
-//            = new android.app.LoaderManager.LoaderCallbacks<List<String>>() {
-//
-//        @Override
-//        public android.content.Loader<List<String>> onCreateLoader(int id, Bundle args) {
-//            // Loaderの生成
-//            DatabaseLoader loader = new DatabaseLoader(getActivity(), args.getString(ARGS_DATE));
-//            loader.forceLoad();
-//            return loader;
-//        }
-//
-//        @Override
-//        public void onLoadFinished(android.content.Loader<List<String>> loader, List<String> data) {
-//            // アダプターをセットする
-//            mAdapter = new GalleryAdapter(getActivity(), data);
-//            mRecyclerView.setAdapter(mAdapter);
-//        }
-//
-//        @Override
-//        public void onLoaderReset(android.content.Loader<List<String>> loader) {
-//            mAdapter.clear();
-//        }
-//    };
-//
-//    private static class DatabaseLoader extends AsyncTaskLoader<List<String>> {
-//        String dataStr;
-//
-//        public DatabaseLoader(Context context, String dataStr) {
-//            super(context);
-//            this.dataStr = dataStr;
-//        }
-//
-//        @Override
-//        public List<String> loadInBackground() {
-//            MemoOpenHelper helper = new MemoOpenHelper(getContext());
-//            SQLiteDatabase database = helper.getReadableDatabase();
-//
-//            List<String> filePaths = new ArrayList<>();
-//
-//            String[] projection = {
-//                MemoContract.Notes._ID,
-//                MemoContract.Notes.COL_BODY,
-//                MemoContract.Notes.COL_ELAPSED_TIME,
-//                MemoContract.Notes.COL_CURRENT_COUNT,
-//                MemoContract.Notes.COL_GOAL_COUNT,
-//                MemoContract.Notes.COL_CREATED,
-//                MemoContract.Notes.COL_UPDATED
-//            };
-//
-//            // リストの全件を検索する
-//            Cursor cursor = database.query(
-//                    MemoContract.Notes.TABLE_NAME,
-//                    projection,
-//                    null,
-//                    null,
-//                    null,
-//                    null,
-//                    MemoContract.Notes.COL_UPDATED + " DESC");
-//
-//            if (cursor == null) return filePaths;
-//
-//            // Cursorからファイルパスをリストに詰める
-//            while (cursor.moveToNext()) {
-//                String path = cursor.getString(cursor.getColumnIndex(PictureDBHelper.COLUMN_FILE_PATH));
-//                filePaths.add(path);
-//            }
-//
-//            cursor.close();
-//            database.close();
-//
-//            return filePaths;
-//        }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
