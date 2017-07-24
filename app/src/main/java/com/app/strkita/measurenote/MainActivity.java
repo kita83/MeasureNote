@@ -43,10 +43,6 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
     public final static String EXTRA_ID = "com.app.strkita.measurenote.ID";
-    private static final int BODY = 1;
-    private static final int ELAPSED_TIME = 2;
-    private static final int CURRENT_COUNT = 3;
-    private static final int GOAL_COUNT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,31 +126,7 @@ public class MainActivity extends AppCompatActivity
 
         getSupportLoaderManager().initLoader(0, null, this);
 
-//        reflectSettings();
     }
-
-//    private void reflectSettings() {
-//        Context context = getApplicationContext();
-//        if (context != null) {
-//            setFontSize(SettingPrefUtil.getFontSize(context));
-//            switchTheme(SettingPrefUtil.isScreenReverse(context));
-//        }
-//    }
-//
-//    // 文字サイズの設定を反映する
-//    private void setFontSize(float fontSizePx) {
-//        TextView textView = (TextView) findViewById(R.id.bodyText);
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSizePx);
-//    }
-//
-//    // 色の反転の設定を反映する
-//    private void switchTheme(boolean reverse) {
-//        if (reverse) {
-//
-//        }
-//    }
-//    // 設定を反映する
-
 
     /**
      * 削除用ダイアログ

@@ -1,5 +1,6 @@
 package com.app.strkita.measurenote;
 
+import android.content.ClipData;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -67,14 +70,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         } else {
             holder.goalCount.setText(" 文字");
         }
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onClick(v);
-            }
-        });
-
     }
 
     @Override
@@ -82,17 +77,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return (dataCursor == null) ? 0 : dataCursor.getCount();
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        View mView;
         TextView bodyText;
         TextView currentCount;
         TextView goalCount;
         TextView elapsedTime;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
-            mView = itemView;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
             this.bodyText = (TextView) itemView.findViewById(R.id.bodyText);
             this.currentCount = (TextView) itemView.findViewById(R.id.currentCount);
             this.goalCount = (TextView) itemView.findViewById(R.id.goalCount);
